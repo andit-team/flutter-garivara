@@ -16,6 +16,7 @@ dependencies:
 
   #UI/UX
   intro_slider: ^2.3.3
+  flutter_signin_button: ^1.1.0
 
   #GetX
   get: ^3.17.1

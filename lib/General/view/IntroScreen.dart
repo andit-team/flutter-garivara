@@ -1,5 +1,5 @@
+import 'package:andgarivara/General/model/introViewModel.dart';
 import 'package:andgarivara/General/view/signInScreen.dart';
-import 'package:andgarivara/General/view_model/introViewModel.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:flutter/cupertino.dart';
