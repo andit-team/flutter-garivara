@@ -1,0 +1,45 @@
+name: andgarivara
+description: Want to have a safe,secure & comfortable journey? Andgarivara is here for you Featuring instant ride, ride sharing, rent a car ,car leasing and much more.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.0
+
+  #UI/UX
+  intro_slider: ^2.3.3
+
+  #GetX
+  get: ^3.17.1
+  get_storage: ^1.3.2
+
+  #payment
+  braintree_payment: ^1.2.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/images/intro/
+    - assets/images/appLogo/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+    - family: Montserrat-Bold
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
