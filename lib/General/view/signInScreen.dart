@@ -1,5 +1,5 @@
 import 'package:andgarivara/General/view/signupScreen.dart';
-import 'package:andgarivara/User/view/homeScreen.dart';
+import 'package:andgarivara/User/view/homeScreen/homeScreen.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/widgets/checkbox.dart';
 import 'package:flutter/material.dart';
