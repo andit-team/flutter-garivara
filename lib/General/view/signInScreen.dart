@@ -1,3 +1,4 @@
+import 'package:andgarivara/General/view/forgotPasswordScreen.dart';
 import 'package:andgarivara/General/view/signupScreen.dart';
 import 'package:andgarivara/User/view/homeScreen/homeScreen.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
@@ -240,17 +241,18 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Row forgotPassword() {
-    return Row(
-                                      children: [
-                                        Text(
-                                          "Forgot password?",
-                                          style: TextStyle(
-                                            fontSize: getSizeConfig.width * 40,
-                                          ),
-                                        ),
-                                      ],
-                                    );
+  GestureDetector forgotPassword() {
+    return GestureDetector(
+      onTap:(){
+        Get.to(ForgotPassword());
+      },
+      child: Text(
+        "Forgot password?",
+        style: TextStyle(
+          fontSize: getSizeConfig.width * 40,
+        ),
+      ),
+    );
   }
 
   Padding signInButton() {
