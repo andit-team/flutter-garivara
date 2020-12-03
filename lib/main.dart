@@ -20,13 +20,19 @@ class InitiateApp extends StatelessWidget {
     Get.put(GetSizeConfig());
     Get.put(GetUserLocation());
 
+    final newTextTheme = Theme.of(context).textTheme.apply(
+      bodyColor: Colors.black,
+      displayColor: Colors.black,
+    );
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.zoom,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Montserrat-Regular'
+        fontFamily: 'Montserrat-Regular',
+        textTheme: newTextTheme
       ),
       home: SplashScreen(),
     );
