@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:andgarivara/User/view/homeScreen/widgets/homeTopTextField.dart';
+import 'package:andgarivara/User/view/homeScreen/widgets/vehicleTypes.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
 import 'package:andgarivara/Utils/widgets/redButton.dart';
@@ -149,10 +150,20 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               selectVehicleType(),
-              Spacer(),
+              Icon(
+                Icons.info_outline,
+                size: sizeConfig.getPixels(25),
+              ),
+              Text(
+                'To get specific cost add your destination perfectly',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: sizeConfig.getPixels(14),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 55),
                 child: RedButton(
@@ -193,46 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedVehicle = index;
         });
       },
-      child: AnimatedOpacity(
-        duration: AppConst.duration,
-        opacity: selected ? 1 : .5,
-        child: AnimatedContainer(
-          duration: AppConst.duration,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(sizeConfig.width * 30),
-            border: selected ? Border.all(
-              color: AppConst.appGreen,
-              width: 2
-            ) : Border(
-              top: BorderSide.none,
-              bottom: BorderSide.none,
-              left: BorderSide.none,
-              right: BorderSide.none,
-            )
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: sizeConfig.height * 50,
-                width: sizeConfig.width * 200,
-                child: CachedNetworkImage(
-                  imageUrl: 'https://previews.123rf.com/images/janista/janista1709/janista170900014/85494232-car-black-and-white-sketch-vector-icon.jpg',
-                ),
-              ),
-              Text(
-                'Car',
-                style: TextStyle(
-                  fontSize: sizeConfig.getPixels(16),
-                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                  color: selected ? AppConst.appGreen : Colors.black
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      child: VehicleTypesCard(selected: selected,),
     );
   }
 
