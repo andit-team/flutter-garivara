@@ -1,9 +1,12 @@
 import 'package:andgarivara/General/view/IntroScreen.dart';
 import 'package:andgarivara/General/view/signInScreen.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
+import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -76,10 +79,21 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     } else {
       super.initState();
+      getUserLocation();
      // GetStorage().erase();
       String fLogin = GetStorage().read('firstTimeStart');
       firstLogin = fLogin.isNull ? true : false;
+
     }
+  }
+
+  getUserLocation() async{
+    GetUserLocation location = Get.find();
+    Position position;
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    LatLng latLng;
+    latLng = LatLng(position.latitude, position.longitude);
+    location.updateLocation(latLng);
   }
 
   @override

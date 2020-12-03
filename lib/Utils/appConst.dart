@@ -13,4 +13,5 @@ class AppConst{
   static final Color txtBg = Color(0xffF6F7F8);
   static final Color titleColor = Colors.grey.shade800;
   static final Color greyColor = Color(0xffCFCFD0);
+  static final Duration duration = Duration(milliseconds: 300);
 }

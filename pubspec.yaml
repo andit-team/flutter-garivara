@@ -17,17 +17,35 @@ dependencies:
   #UI/UX
   intro_slider: ^2.3.3
   flutter_signin_button: ^1.1.0
+  loading_overlay: ^0.2.1
+  flutter_spinkit: ^4.1.2
+  google_maps_flutter: ^1.0.6
+  permission: ^0.1.7
+  geolocator: ^6.1.7
+  geocoder: ^0.2.1
+  cached_network_image: ^2.3.3
+  flutter_launcher_icons: ^0.8.1
+
 
   #GetX
   get: ^3.17.1
   get_storage: ^1.3.2
 
   #payment
-  braintree_payment: ^1.2.4
+#  braintree_payment: ^1.2.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/appLogo/app_logo.png"
+  adaptive_icon_background: '#C8102E'
+  fill: true
+  #flutter pub get
+  #flutter pub run flutter_launcher_icons:main
 
 flutter:
   uses-material-design: true
