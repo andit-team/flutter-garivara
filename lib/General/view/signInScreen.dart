@@ -1,6 +1,7 @@
 import 'package:andgarivara/General/view/signupScreen.dart';
 import 'package:andgarivara/User/view/homeScreen/homeScreen.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
+import 'package:andgarivara/Utils/widgets/checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -53,186 +54,52 @@ class _SignInScreenState extends State<SignInScreen> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          backgroundColor: Color(0xffF7F8FA),
+          backgroundColor: Color(0xffffffff),
           body: Center(
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: height * 20,
-                  ),
-                  Container(
-                    height: height * 250,
-                    width: width * 800,
-                    child: Image.asset(
-                      'assets/images/appLogo/andgarivara_hero.gif',
-                      // fit: BoxFit.cover,
-                    ),
-                  ),
-                  Text(
-                    'Welcome to Andgarivara',
-                    style: TextStyle(
-                      fontSize: getSizeConfig.width * 60,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: width * 50, vertical: height * 10),
-                    child: Card(
-                      color: Color(0xffFFFFFF),
-                      child: Container(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: width * 50, vertical: height * 15),
-                          child: Column(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width*70),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    logo(),
+                    upperTitle(),
+                    form(),
+                    Padding(
+                      padding: EdgeInsets.symmetric( vertical: height * 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: height * 10),
-                                    child: TextField(
-                                      controller: mobile,
-                                      focusNode: mobileNode,
-                                      autofocus: true,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: height * 5,
-                                            horizontal: width * 30),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                          color: Color(0xff233F53),
-                                        )),
-                                        labelText: 'Mobile',
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: height * 10),
-                                    child: TextField(
-                                      controller: password,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: height * 5,
-                                            horizontal: width * 30),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                          color: Color(0xff233F53),
-                                        )),
-                                        labelText: 'Password',
-                                      ),
-                                    ),
-                                  ),
-
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(vertical: height * 10),
-                                    child: Row(
-                                      children: [
-                                        NoPaddingCheckbox(
-                                          isMarked: rememberMe,
-                                          size: width * 70,
-                                          onChange: (bool newValue) {
-                                            setState(() {
-                                              rememberMe = newValue;
-                                            });
-                                          },
-                                        ),
-                                        SizedBox(
-                                          width: width * 10,
-                                        ),
-                                        Text(
-                                          "Keep me signed in",
-                                          style: TextStyle(
-                                            fontSize: getSizeConfig.width * 40,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              Container(
+                                width: width * 250,
+                                height: height * 5,
+                                color: Color(0xff707070),
                               ),
-
-                              Padding(
-                                padding:
-                                EdgeInsets.symmetric(vertical: height * 10),
-                                child: Container(
-                                  child: FlatButton(
-                                    onPressed: () {Get.to(HomeScreen());},
-                                    child: Text(
-                                      'Sign In',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    color: Color(0xff233F53),
-                                    splashColor: Colors.grey,
-                                  ),
+                              Text(
+                                'Or connect with',
+                                style: TextStyle(fontSize: getSizeConfig.getPixels(16),
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff34415F)
                                 ),
-                              )
+                              ),
+                              Container(
+                                width: width * 250,
+                                height: height * 5,
+                                color: Color(0xff707070),
+                              ),
                             ],
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: height*10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SignInButton(
-                          Buttons.Facebook,
-                          mini: false,
-                          onPressed: () {
-                           Get.snackbar('Facebook', 'LinkedIn Signed Up');
-                          },
-                        ),
-                        SignInButton(
-                          Buttons.Twitter,
-                          mini: false,
-                          onPressed: () {
-                            Get.snackbar('Twitter', 'Twitter Signed Up');
-                          },
-                        ),
-                        SignInButton(
-                          Buttons.Google,
-                          mini: false,
-                          onPressed: () {
-                            Get.snackbar('Google', 'Google Signed Up');
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Do not have an account? ",
-                        style: TextStyle(
-                          fontSize: getSizeConfig.width * 40,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(SignUpScreen());
-                        },
-                        child: Text(
-                          "Sign up now!",
-                          style: TextStyle(
-                              fontSize: getSizeConfig.width * 40,
-                              color: Color(0xff0A98FE)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    socialMedia(),
+                    haveAccount(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -240,36 +107,238 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-}
 
-class NoPaddingCheckbox extends StatelessWidget {
-  final bool isMarked;
-  final Function(bool newValue) onChange;
-  final double size;
-
-  NoPaddingCheckbox({
-    @required this.isMarked,
-    @required this.onChange,
-    this.size = 24,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: size, maxWidth: size),
-      child: RawMaterialButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        child: Icon(_getIconData(), size: size),
-        onPressed: () => onChange(!isMarked),
+  Padding logo() {
+    return Padding(
+      padding: EdgeInsets.symmetric( vertical: height * 10),
+      child: Container(
+        height: height * 250,
+        width: width * 800,
+        child: Image.asset(
+          'assets/images/appLogo/andgarivara_hero.gif',
+          // fit: BoxFit.cover,
+        ),
       ),
     );
   }
 
-  IconData _getIconData() {
-    if (isMarked) {
-      return Icons.check_box;
-    }
-
-    return Icons.check_box_outline_blank;
+  Padding upperTitle() {
+    return Padding(
+      padding: EdgeInsets.symmetric( vertical: height * 2),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Ride with Andgarivara',
+          style: TextStyle(
+            fontSize: getSizeConfig.width * 60,
+            color: Colors.black
+          ),
+        ),
+      ),
+    );
   }
+
+  Padding form() {
+    return Padding(
+      padding: EdgeInsets.symmetric( vertical: height * 10),
+      child: Container(
+        child: Padding(
+          padding: EdgeInsets.symmetric( vertical: height * 15),
+          child: Column(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  mobileTextField(),
+                  passwordTextField(),
+                  Padding(
+                    padding:
+                    EdgeInsets.symmetric(vertical: height * 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        rememberMeCheckbox(),
+                        forgotPassword(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              signInButton()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding mobileTextField() {
+    return Padding(
+      padding:
+      EdgeInsets.symmetric(vertical: height * 10),
+      child: TextField(
+        controller: mobile,
+        focusNode: mobileNode,
+        autofocus: true,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(
+              vertical: height * 5,
+              horizontal: width * 30),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(width*20),
+              borderSide: BorderSide(
+                color: Color(0xff233F53),
+              )),
+          labelText: 'Enter your mobile number',
+        ),
+      ),
+    );
+  }
+
+  Padding passwordTextField() {
+    return Padding(
+      padding:
+      EdgeInsets.symmetric(vertical: height * 10),
+      child: TextField(
+        controller: password,
+        obscureText: true,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(
+              vertical: height * 5,
+              horizontal: width * 30),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(width*20),
+              borderSide: BorderSide(
+                color: Color(0xff233F53),
+              )),
+          labelText: 'Enter your password',
+        ),
+      ),
+    );
+  }
+
+  Row rememberMeCheckbox() {
+    return Row(
+      children: [
+        NoPaddingCheckbox(
+          isMarked: rememberMe,
+          size: width * 70,
+          onChange: (bool newValue) {
+            setState(() {
+              rememberMe = newValue;
+            });
+          },
+        ),
+        SizedBox(
+          width: width * 10,
+        ),
+        Text(
+          "Remember Me",
+          style: TextStyle(
+            fontSize: getSizeConfig.width * 40,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row forgotPassword() {
+    return Row(
+                                      children: [
+                                        Text(
+                                          "Forgot password?",
+                                          style: TextStyle(
+                                            fontSize: getSizeConfig.width * 40,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+  }
+
+  Padding signInButton() {
+    return Padding(
+                            padding:
+                            EdgeInsets.symmetric(vertical: height * 10),
+                            child: Container(
+                              width: width*1000,
+                              height: height*70,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(width*80),
+                                    side: BorderSide(color: Colors.red)
+                                ),
+                                onPressed: () {
+                                  Get.to(HomeScreen());},
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(color: Colors.white,fontSize: getSizeConfig.getPixels(20)),
+                                ),
+                                color: Color(0xffC8102E),
+                                splashColor: Colors.grey,
+                              ),
+                            ),
+                          );
+  }
+
+  Padding socialMedia() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: height*10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SignInButton(
+            Buttons.Facebook,
+            mini: false,
+            onPressed: () {
+              Get.snackbar('Facebook', 'LinkedIn Signed Up');
+            },
+          ),
+          SignInButton(
+            Buttons.Twitter,
+            mini: false,
+            onPressed: () {
+              Get.snackbar('Twitter', 'Twitter Signed Up');
+            },
+          ),
+          SignInButton(
+            Buttons.Google,
+            mini: false,
+            onPressed: () {
+              Get.snackbar('Google', 'Google Signed Up');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Row haveAccount() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Do not have an account? ",
+          style: TextStyle(
+            fontSize: getSizeConfig.width * 40,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Get.to(SignUpScreen());
+          },
+          child: Text(
+            "Sign Up!",
+            style: TextStyle(
+                fontSize: getSizeConfig.width * 40,
+                color: Color(0xff0A98FE)),
+          ),
+        ),
+      ],
+    );
+  }
+
+
 }
+
