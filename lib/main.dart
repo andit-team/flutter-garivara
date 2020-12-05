@@ -27,12 +27,13 @@ class InitiateApp extends StatelessWidget {
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.zoom,
+      defaultTransition: Transition.cupertino,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Montserrat-Regular',
-        textTheme: newTextTheme
+        fontFamily: 'Roboto-R',
+        textTheme: newTextTheme,
+        scaffoldBackgroundColor: Colors.white
       ),
       home: SplashScreen(),
     );

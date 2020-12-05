@@ -27,6 +27,9 @@ class HomeTextField extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               labelText: label,
+              labelStyle: TextStyle(
+                color: AppConst.themeRed
+              ),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none
               ),

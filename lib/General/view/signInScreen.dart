@@ -1,4 +1,5 @@
 import 'package:andgarivara/General/view/signupScreen.dart';
+import 'package:andgarivara/User/view/home.dart';
 import 'package:andgarivara/User/view/homeScreen/homeScreen.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/widgets/checkbox.dart';
@@ -270,7 +271,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     side: BorderSide(color: Colors.red)
                                 ),
                                 onPressed: () {
-                                  Get.to(HomeScreen());},
+                                  Get.to(HomeBody());},
                                 child: Text(
                                   'Login',
                                   style: TextStyle(color: Colors.white,fontSize: getSizeConfig.getPixels(20)),

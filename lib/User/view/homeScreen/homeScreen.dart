@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:andgarivara/User/view/homeScreen/chooseLocation.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/homeTopTextField.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/vehicleTypes.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
+import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
 import 'package:andgarivara/Utils/widgets/redButton.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
@@ -45,18 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: (){
-              // getInitialPosition();
-            },
-            icon: Icon(Icons.api),
-          )
-        ],
-      ),
       extendBodyBehindAppBar: true,
       body: Container(
         height: Get.height,
@@ -97,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget chooseLocation(){
     return Positioned(
-      top: AppBar().preferredSize.height /*+ AppBar().preferredSize.height*/,
+      top: AppBar().preferredSize.height + AppBar().preferredSize.height,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
         child: Column(
@@ -105,7 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             HomeTextField(
               onTap: () async{
-                // pickUpLocation.text = await getPickupLocation();
+                print('123');
+                pickUpLocation.text = await Get.to(ChooseLocationScreen(),arguments: 'p');
               },
               controller: pickUpLocation,
               prefix: Icons.my_location,
@@ -113,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             HomeTextField(
               onTap: () async{
-                // dropOffLocation.text = await getDropOffLocation();
+                print('456');
+                dropOffLocation.text = await Get.to(ChooseLocationScreen(),arguments: 'd');
               },
               controller: dropOffLocation,
               prefix: Icons.add_location_alt_sharp,
@@ -124,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   Widget bottomSheet(){
     return Positioned(
       bottom: 0,
@@ -158,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: sizeConfig.getPixels(25),
               ),
               Text(
-                'To get specific cost add your destination perfectly',
+                StringResources.homeScreenHint,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: sizeConfig.getPixels(14),
@@ -167,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 55),
                 child: RedButton(
-                  title: 'Search Vehicles',
+                  title: StringResources.btnHomeSearchVehicle,
                   function: (){}
                 ),
               )

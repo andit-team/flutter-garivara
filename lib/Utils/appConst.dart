@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class AppConst{
   static final Color appRed = Color(0xff0C8102E);
   static final Color themeRed = Color(0xff0C8102E);
+  static final Color themeBlue = Color(0xff0C0A3E);
   static final Color appGreen = Color(0xff2ECC71);
   static final Color greenColor = Color(0xff2ECC71);
   static final Color appBlue = Color(0xff2699FB);
