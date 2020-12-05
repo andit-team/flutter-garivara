@@ -1,6 +1,8 @@
 import 'package:andgarivara/User/model/VehicleResultModel.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
+import 'package:andgarivara/Utils/widgets/overScroll.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -26,9 +28,9 @@ class RideResults extends StatelessWidget {
         width: width,
         height: height,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width*70),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width*70),
+        child: OverScroll(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -59,18 +61,26 @@ class RideResults extends StatelessWidget {
                   ),
                 ),
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
+              Expanded(
+                child: ListView.builder(
+                  // physics: ScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: VehicleResultModel.vehicleResultModelData.length,
                   itemBuilder: (context, index){
-                  var item = VehicleResultModel.vehicleResultModelData[index];
+                    var item = VehicleResultModel.vehicleResultModelData[index];
+                    Color color;
+                    if (index % 2== 0) {
+                      color = Color(0xffE3E8F2);
+                    }
+                    else {
+                      color = Color(0xffffffff);
+                    }
                     return Padding(
                       padding:EdgeInsets.symmetric(vertical: height*7),
                       child: Container(
-                        color: Color(0xffE3E8F2),
+                        color: color,
                         child: Padding(
-                          padding: EdgeInsets.all(width*35),
+                          padding: EdgeInsets.symmetric(horizontal:width*20,vertical: height*30),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,28 +90,39 @@ class RideResults extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('${item.vehicleName}',style: TextStyle(color: Colors.black,fontSize: getSizeConfig.getPixels(18))),
-                                  Text('${item.vehicleLocation}',style: TextStyle(color: Colors.black,fontSize: getSizeConfig.getPixels(14))),
+                                  Text('${item.vehicleLocation}',style: TextStyle(color: Colors.black.withOpacity(0.8),fontSize: getSizeConfig.getPixels(14))),
                                   SizedBox(height: height*20,),
-                                  RichText(
-                                      text: TextSpan(
+                                  Row(
                                     children: [
-                                      TextSpan(text: 'TK ${item.amount}',style: TextStyle(color: Colors.blue,fontSize: getSizeConfig.getPixels(16)),),
-                                      TextSpan(text: '/per day',style: TextStyle(color: Colors.blue,fontSize: getSizeConfig.getPixels(14)),),
-                                    ]
-                                  ),
+                                      RichText(
+                                        text: TextSpan(
+                                            children: [
+                                              TextSpan(text: 'TK ${item.amount}',style: TextStyle(color: Colors.blue,fontSize: getSizeConfig.getPixels(16)),),
+                                              TextSpan(text: '/per day',style: TextStyle(color: Colors.blue,fontSize: getSizeConfig.getPixels(14)),),
+                                            ]
+                                        ),
+                                      ),
+                                      SizedBox(width: width*70,),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.supervised_user_circle_outlined,size: getSizeConfig.getPixels(18),),
+                                          SizedBox(width: width*10,),
+                                          Text('${item.minCap}-',style: TextStyle(color: Colors.black,fontSize: getSizeConfig.getPixels(12))),
+                                          Text('${item.maxCap}',style: TextStyle(color: Colors.black,fontSize: getSizeConfig.getPixels(12))),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: [],
-                              ),
-                              Text('q221'),
+                              CachedNetworkImage(imageUrl: item.vehicleImage,width: width*260,height:height*85)
                             ],
                           ),
                         ),
                       ),
                     );
                   },
+                ),
               ),
             ],
           ),

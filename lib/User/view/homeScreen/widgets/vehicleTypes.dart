@@ -37,7 +37,7 @@ class VehicleTypesCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: sizeConfig.height * 40,
+              height: sizeConfig.height * 35,
               width: sizeConfig.width * 200,
               child: CachedNetworkImage(
                 fit: BoxFit.contain,
