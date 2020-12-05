@@ -9,6 +9,8 @@ import 'package:andgarivara/Utils/widgets/loader.dart';
 import 'package:andgarivara/Utils/widgets/redButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -28,6 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   LatLng position;
   LatLng initialPosition;
   Completer<GoogleMapController> mapController = Completer();
+  List<LatLng> polylineCoordinates = [];
+  PolylinePoints polylinePoints = PolylinePoints();
+  Set<Polyline> _polyLines = Set<Polyline>();
+
 
 
   TextEditingController pickUpLocation = TextEditingController();
@@ -80,9 +86,17 @@ class _HomeScreenState extends State<HomeScreen> {
         initialCameraPosition: initialCameraPosition,
         onMapCreated: _onMapCreated,
         markers: gMarker,
+        onTap: setNewLocation,
+        polylines: _polyLines,
       ),
     );
   }
+
+  Address pickUpAddress;
+  Address dropOffAddress;
+
+  LatLng pickUp;
+  LatLng dropOff;
 
   Widget chooseLocation(){
     return Positioned(
@@ -94,8 +108,12 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             HomeTextField(
               onTap: () async{
-                print('123');
-                pickUpLocation.text = await Get.to(ChooseLocationScreen(),arguments: 'p');
+                pickUpAddress = await Get.to(ChooseLocationScreen(),arguments: 'p');
+                if(pickUpAddress != null){
+                  pickUpLocation.text = pickUpAddress.addressLine;
+                  pickUp = LatLng(pickUpAddress.coordinates.latitude, pickUpAddress.coordinates.longitude);
+                  _setPolyLines(pickUp,dropOff);
+                }
               },
               controller: pickUpLocation,
               prefix: Icons.my_location,
@@ -103,8 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             HomeTextField(
               onTap: () async{
-                print('456');
-                dropOffLocation.text = await Get.to(ChooseLocationScreen(),arguments: 'd');
+                dropOffAddress = await Get.to(ChooseLocationScreen(),arguments: 'd');
+                if(dropOffAddress != null){
+                  dropOffLocation.text = dropOffAddress.addressLine;
+                  dropOff = LatLng(dropOffAddress.coordinates.latitude, dropOffAddress.coordinates.longitude);
+                  _setPolyLines(pickUp,dropOff);
+                }
               },
               controller: dropOffLocation,
               prefix: Icons.add_location_alt_sharp,
@@ -227,6 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
   functions() async{
     GetUserLocation userLocation = Get.find();
     initialPosition = userLocation.location.value;
+    pickUp = initialPosition;
     await setInitialPosition(initialPosition);
     setState(() {
       loading = false;
@@ -243,13 +266,18 @@ class _HomeScreenState extends State<HomeScreen> {
     await getAddressFromLatLng(initialPosition);
   }
 
-  addMarker(location) async{
+  bool init = true;
+
+  addMarker(LatLng location, [String s]) async{
     position = location;
     gMarker.add(Marker(
-        markerId: MarkerId('pickup'),
+        markerId: MarkerId(s ?? 'userLocation'),
         position: location
     ));
-    await getAddressFromLatLng(location);
+    if(init){
+      await getAddressFromLatLng(location);
+      init = false;
+    }
     await _updateCameraPosition(location);
   }
 
@@ -273,5 +301,37 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       mapController.complete(controller);
     });
+  }
+
+  setNewLocation(LatLng location) {
+    setState(() {
+      addMarker(location);
+    });
+  }
+
+
+  _setPolyLines(LatLng pickUp, LatLng dropOff)  {
+    if(pickUpAddress != null && dropOffAddress !=null){
+      polylineCoordinates.clear();
+      polylinePoints.getRouteBetweenCoordinates(DotEnv().env['google_api_key'],
+          PointLatLng(pickUp.latitude, pickUp.longitude),
+          PointLatLng(dropOff.latitude, dropOff.longitude)).then((valuePoints) {
+        if (valuePoints.points.isNotEmpty) {
+          valuePoints.points.forEach((PointLatLng point) {
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));});
+          // _getDistance(polylineCoordinates,'Destination');
+          setState(() {
+            gMarker.clear();
+            addMarker(pickUp,'pickUp');
+            addMarker(dropOff,'dropOff');
+            _polyLines.add(Polyline(
+              width: 8,
+              polylineId: PolylineId("poly"),
+              color: AppConst.appGreen,
+              points: polylineCoordinates));
+          });
+        }
+      });
+    }
   }
 }

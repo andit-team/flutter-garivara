@@ -3,6 +3,7 @@ import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 
 class ChooseLocationScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
   final GetSizeConfig sizeConfig = Get.find();
 
   String meh;
+  Address location;
 
   TextEditingController addressController = TextEditingController(text: '32, Choto mirjapur, Ahsan ahmed road...');
 
@@ -26,6 +28,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(location);
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -85,7 +88,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                 ),
                 IconButton(
                   onPressed: (){
-                    Get.back(result: 'none');
+                    Get.back(result: location);
                   },
                   icon: Icon(
                     Icons.clear,
@@ -128,8 +131,13 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
             ),
             SizedBox(height: sizeConfig.height * 20,),
             InkWell(
-              onTap: (){
-                Get.to(ChooseLocationFromMap());
+              onTap: () async{
+                location = await Get.to(ChooseLocationFromMap());
+                if(location == null){
+
+                }else{
+                  addressController.text = location.addressLine;
+                }
               },
               child: Row(
                 children: [
