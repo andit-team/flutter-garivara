@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'package:andgarivara/Utils/appConst.dart';
+import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,13 +17,16 @@ class ChooseLocationFromMap extends StatefulWidget {
 
 class _ChooseLocationFromMapState extends State<ChooseLocationFromMap> {
   GetUserLocation userLocation = Get.find();
+  final GetSizeConfig sizeConfig = Get.find();
   bool loading = true;
 
   Set<Marker> gMarker = Set<Marker>();
   Position position;
   CameraPosition initialCameraPosition;
   Completer<GoogleMapController> mapController = Completer();
+  List<Address> addressList = [];
 
+  TextEditingController editingController = TextEditingController();
 
   setData() async{
     initialCameraPosition = CameraPosition(
@@ -46,10 +51,79 @@ class _ChooseLocationFromMapState extends State<ChooseLocationFromMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: loading ? Loader() : GoogleMap(
-        initialCameraPosition: initialCameraPosition,
-        markers: gMarker,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1111)),
+          child: IconButton(
+            onPressed: (){
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppConst.themeRed,
+            ),
+          ),
+        ),
+      ),
+      body: loading ? Loader() : Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: initialCameraPosition,
+            markers: gMarker,
+            onMapCreated: _onMapCreated,
+            onTap: setNewLocation,
+            zoomControlsEnabled: false,
+          ),
+          selectAddress()
+        ],
+      ),
+    );
+  }
 
+  Widget selectAddress(){
+    return Positioned(
+      top: AppBar().preferredSize.height + Get.mediaQuery.padding.top,
+      left: sizeConfig.getPixels(30),
+      right: sizeConfig.getPixels(30),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sizeConfig.width * 30)),
+        child: Stack(
+          children: [
+            TextField(
+              controller: editingController,
+              onSubmitted: getAddressFromAddress,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: sizeConfig.width * 20,right: sizeConfig.width * 130),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(sizeConfig.width * 30)
+                ),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: InkWell(
+                onTap: (){
+                  Get.back(result: address);
+                },
+                child: Card(
+                  color: AppConst.themeRed,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sizeConfig.width * 30)),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 20),
+                    child: Icon(
+                      Icons.navigate_next_outlined,
+                      color: Colors.white,
+                      size: sizeConfig.getPixels(30),
+                    ),
+                  )
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -65,19 +139,20 @@ class _ChooseLocationFromMapState extends State<ChooseLocationFromMap> {
 
 
 
-  addMarker(location) async{
-    gMarker.add(Marker(
-        markerId: MarkerId('marker'),
-        position: location
-    ));
+  addMarker(LatLng location) async{
+    setState(() {
+      gMarker.add(Marker(
+          markerId: MarkerId('marker'),
+          position: location
+      ));
+    });
     await getAddressFromLatLng(location);
-    // await _updateCameraPosition(location);
   }
 
   getAddressFromLatLng(LatLng latLng) async {
-    List<Address> addressList = [];
     addressList = await Geocoder.local.findAddressesFromCoordinates(Coordinates(latLng.latitude, latLng.longitude));
-    // pickUpLocation.text = addressList[0].addressLine;
+    address = addressList[0];
+    editingController.text = addressList[0].addressLine;
   }
 
   _updateCameraPosition(LatLng loc) async {
@@ -90,4 +165,26 @@ class _ChooseLocationFromMapState extends State<ChooseLocationFromMap> {
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
   }
 
+  _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      mapController.complete(controller);
+    });
+  }
+
+  setNewLocation(LatLng location) async{
+    setState(() {
+      addMarker(location);
+    });
+    await _updateCameraPosition(location);
+  }
+
+  Address address;
+
+  void getAddressFromAddress(String value) async{
+    addressList = await Geocoder.local.findAddressesFromQuery(value);
+    editingController.text = addressList[0].addressLine;
+    address = addressList[0];
+    addMarker(LatLng(addressList[0].coordinates.latitude, addressList[0].coordinates.longitude));
+    await _updateCameraPosition(LatLng(addressList[0].coordinates.latitude, addressList[0].coordinates.longitude));
+  }
 }

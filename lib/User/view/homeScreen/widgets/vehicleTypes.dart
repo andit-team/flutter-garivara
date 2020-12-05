@@ -17,6 +17,8 @@ class VehicleTypesCard extends StatelessWidget {
       duration: AppConst.duration,
       opacity: selected ? 1 : .5,
       child: AnimatedContainer(
+        height: sizeConfig.height * 70,
+        width: sizeConfig.width * 230,
         duration: AppConst.duration,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(sizeConfig.width * 30),
@@ -34,8 +36,8 @@ class VehicleTypesCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: sizeConfig.height * 50,
+            Container(
+              height: sizeConfig.height * 40,
               width: sizeConfig.width * 200,
               child: CachedNetworkImage(
                 fit: BoxFit.contain,
