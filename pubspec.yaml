@@ -25,7 +25,7 @@ dependencies:
   geocoder: ^0.2.1
   cached_network_image: ^2.3.3
   flutter_launcher_icons: ^0.8.1
-
+  pinput: ^0.2.6
 
   #GetX
   get: ^3.17.1

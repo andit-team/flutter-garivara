@@ -1,3 +1,5 @@
+import 'package:andgarivara/General/view/passwordResetScreen.dart';
+import 'package:andgarivara/General/view/verifyOTP.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +10,7 @@ class ForgotPassword extends StatelessWidget {
   double width;
   double height;
 
-  TextEditingController mobile = TextEditingController();
+  TextEditingController mobile = TextEditingController(text: '01674620011');
   FocusNode mobileNode = FocusNode();
 
   void dispose() {
@@ -77,6 +79,7 @@ class ForgotPassword extends StatelessWidget {
                       controller: mobile,
                       focusNode: mobileNode,
                       decoration: InputDecoration(
+                        prefix: Text('+880'),
                         contentPadding: EdgeInsets.symmetric(
                             vertical: height * 5,
                             horizontal: width * 30),
@@ -101,7 +104,7 @@ class ForgotPassword extends StatelessWidget {
                             side: BorderSide(color: Colors.red)
                         ),
                         onPressed: () {
-                          Get.back();
+                          Get.to(VerifyOTP(phoneNumber: '+88${mobile.text}'));
                           },
                         child: Text(
                           'Send Code',
