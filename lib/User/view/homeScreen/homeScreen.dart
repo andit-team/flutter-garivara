@@ -139,12 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget bottomSheet(){
-    return Positioned(
+    return AnimatedPositioned(
       bottom: 0,
+      duration: AppConst.duration,
       child: Container(
         constraints: BoxConstraints(
           maxWidth: Get.width,
-          maxHeight: Get.height * .3
+          maxHeight: Get.height * .25
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -196,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget selectVehicleType(){
     return Container(
-      height: sizeConfig.height * 100,
+      height: sizeConfig.height * 70,
       padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 35),
       child: ListView.builder(
         itemCount: 10,
@@ -308,7 +309,6 @@ class _HomeScreenState extends State<HomeScreen> {
       addMarker(location);
     });
   }
-
 
   _setPolyLines(LatLng pickUp, LatLng dropOff)  {
     if(pickUpAddress != null && dropOffAddress !=null){
