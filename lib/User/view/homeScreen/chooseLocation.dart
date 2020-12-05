@@ -176,7 +176,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
   Widget bottom(){
     return Container(
-      height: sizeConfig.height * 590,
+      height: sizeConfig.height * 530,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
         child: ListView(
@@ -260,12 +260,17 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                       color: AppConst.themeBlue,
                     ),
                     SizedBox(width: sizeConfig.width * 15,),
-                    Text(
-                      '32, Choto mirjapur, Ahsan ahmed road...',
-                      style: TextStyle(
-                        color: AppConst.themeBlue,
-                        fontSize: sizeConfig.getPixels(16),
-                        fontFamily: 'Roboto-R',
+                    Container(
+                      width: sizeConfig.width*680,
+                      child: Text(
+                        '32, Choto mirjapur, Ahsan ahmed road...',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: AppConst.themeBlue,
+                          fontSize: sizeConfig.getPixels(16),
+                          fontFamily: 'Roboto-R',
+                        ),
                       ),
                     ),
                     Spacer(),

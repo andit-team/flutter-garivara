@@ -28,6 +28,7 @@ dependencies:
   pinput: ^0.2.6
   flutter_polyline_points: ^0.2.4
   flutter_dotenv: ^2.1.0
+  flutter_svg: ^0.19.1
 
   #GetX
   get: ^3.17.1

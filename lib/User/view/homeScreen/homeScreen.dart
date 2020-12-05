@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
       height: Get.height * .75,
       child: GoogleMap(
         compassEnabled: false,
-        zoomControlsEnabled: false,
+        zoomControlsEnabled: true,
         zoomGesturesEnabled: true,
         minMaxZoomPreference: MinMaxZoomPreference.unbounded,
         buildingsEnabled: true,
