@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget chooseLocation(){
     return Positioned(
-      top: AppBar().preferredSize.height + AppBar().preferredSize.height,
+      top: AppBar().preferredSize.height + Get.mediaQuery.padding.top,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
         child: Column(
