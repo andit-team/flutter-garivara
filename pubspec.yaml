@@ -19,16 +19,18 @@ dependencies:
   flutter_signin_button: ^1.1.0
   loading_overlay: ^0.2.1
   flutter_spinkit: ^4.1.2
+  cached_network_image: ^2.3.3
+  flutter_launcher_icons: ^0.8.1
+  pinput: ^0.2.6
+  flutter_dotenv: ^2.1.0
+  flutter_svg: ^0.19.1
+
+  #Map
   google_maps_flutter: ^1.0.6
   permission: ^0.1.7
   geolocator: ^6.1.7
   geocoder: ^0.2.1
-  cached_network_image: ^2.3.3
-  flutter_launcher_icons: ^0.8.1
-  pinput: ^0.2.6
   flutter_polyline_points: ^0.2.4
-  flutter_dotenv: ^2.1.0
-  flutter_svg: ^0.19.1
 
   #GetX
   get: ^3.17.1
@@ -58,6 +60,7 @@ flutter:
     - assets/images/
     - assets/images/intro/
     - assets/images/appLogo/
+    - assets/svg
 
   fonts:
     - family: Roboto-R
