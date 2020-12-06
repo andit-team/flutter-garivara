@@ -303,7 +303,40 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       target: LatLng(loc.latitude, loc.longitude),
     );
     GoogleMapController controller = await mapController.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+    if(pickUp != null && dropOff != null) {
+      var minLat;
+      var maxLat;
+      var minLng;
+      var maxLng;
+
+      if(pickUp.latitude > dropOff.latitude){
+        minLat = dropOff.latitude;
+        maxLat = pickUp.latitude;
+      }else{
+        maxLat = dropOff.latitude;
+        minLat = pickUp.latitude;
+      }
+
+      if(pickUp.longitude > dropOff.longitude){
+        minLng = dropOff.longitude;
+        maxLng = pickUp.longitude;
+      }else{
+        maxLng = dropOff.longitude;
+        minLng = pickUp.longitude;
+      }
+
+      Future.delayed(
+          Duration(milliseconds: 200),
+              () => controller.animateCamera(CameraUpdate.newLatLngBounds(
+              LatLngBounds(
+                southwest: LatLng(minLat, minLng),
+                northeast: LatLng(maxLat, maxLng),
+              ),
+              100
+          )));
+    }else{
+      controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+    }
   }
 
   _onMapCreated(GoogleMapController controller) {
@@ -334,6 +367,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             addMarker(dropOff,'dropOff');
             _polyLines.add(Polyline(
               width: 8,
+              startCap: Cap.roundCap,
+              endCap: Cap.roundCap,
               polylineId: PolylineId("poly"),
               color: AppConst.appGreen,
               points: polylineCoordinates));
