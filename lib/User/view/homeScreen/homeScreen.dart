@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:andgarivara/User/view/RideResults/rideResults.dart';
 import 'package:andgarivara/User/view/homeScreen/chooseLocation.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/homeTopTextField.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/vehicleTypes.dart';
@@ -23,7 +24,11 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   CameraPosition initialCameraPosition;
   Set<Marker> gMarker = Set<Marker>();
@@ -51,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: Container(
@@ -183,7 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 55),
                 child: RedButton(
                   title: StringResources.btnHomeSearchVehicle,
-                  function: (){}
+                  function: (){
+                    Get.to(RideResults());
+                  }
                 ),
               )
             ],
@@ -334,4 +342,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+
+
 }

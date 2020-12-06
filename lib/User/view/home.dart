@@ -12,7 +12,7 @@ class HomeBody extends StatelessWidget {
   double height;
 
 
-  final String assetName = 'assets/svg/Menu.svg';
+  final String assetName = 'assets/images/svg/Menu.svg';
 
   setInitialScreenSize() {
     width = getSizeConfig.width.value;

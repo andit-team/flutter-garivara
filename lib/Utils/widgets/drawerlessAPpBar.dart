@@ -10,7 +10,7 @@ class DrawerlessAppBar extends StatelessWidget implements PreferredSizeWidget{
     @required this.height,
     @required this.width,
   });
-  final String assetName = 'assets/svg/back.svg';
+  final String assetName = 'assets/images/svg/back.svg';
 
   @override
   Widget build(BuildContext context) {
