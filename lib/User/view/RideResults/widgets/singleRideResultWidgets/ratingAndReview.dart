@@ -76,7 +76,7 @@ class RatingAndReviewWidget extends StatelessWidget {
                   ),
                   Container(
                     width: sizeConfig.width * 800,
-                    height: sizeConfig.height * 150,
+                    height: sizeConfig.height * 180,
                     child: Swiper(
                       pagination: SwiperPagination(),
                       itemCount: 3,
@@ -123,19 +123,46 @@ class RatingAndReviewWidget extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  RichText(
-                                    text: WidgetSpan(
-                                      child: Row(
-                                        children: [
-                                          Transform(
-                                              transform: Matrix4.rotationY(math.pi),
-                                            child: Icon(Icons.format_quote_rounded,color: Colors.transparent,)),
-                                          Transform(
-                                              transform: Matrix4.rotationY(math.pi),
-                                            child: Icon(Icons.format_quote_rounded)),
-                                        ],
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        width: sizeConfig.width * 630,
+                                        height: sizeConfig.height * 100,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: SizedBox(width: 14,)
+                                              ),
+                                              TextSpan(
+                                                text: StringResources.review.length > 150 ? StringResources.review.substring(0,150) : StringResources.review,
+                                                style: TextStyle(
+                                                  color: AppConst.textLight
+                                                )
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                  Icons.format_quote,
+                                                  size: 14,
+                                                  color: AppConst.appBlue,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ),
+                                      Positioned(
+                                        left: 14,
+                                        child: Transform(
+                                          transform: Matrix4.rotationY(math.pi),
+                                          child: Icon(
+                                            Icons.format_quote,
+                                            size: 14,
+                                            color: AppConst.appBlue,
+                                          ),
+                                        ),
                                       )
-                                    ),
+                                    ],
                                   )
                                 ],
                               )
