@@ -3,6 +3,7 @@ import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
+import 'package:andgarivara/Utils/widgets/redButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
@@ -75,7 +76,22 @@ class _ChooseLocationFromMapState extends State<ChooseLocationFromMap> {
             onTap: setNewLocation,
             zoomControlsEnabled: false,
           ),
-          selectAddress()
+          selectAddress(),
+          Positioned(
+            bottom: sizeConfig.height * 40,
+            left: sizeConfig.width * 60,
+            right: sizeConfig.width * 60,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(40)),
+              child: RedButton(
+                title: 'Select Location',
+                function: (){
+                  Get.back(result: address);
+                  Get.back(result: address);
+                }
+              ),
+            ),
+          )
         ],
       ),
     );
