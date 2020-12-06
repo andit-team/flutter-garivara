@@ -24,6 +24,8 @@ dependencies:
   pinput: ^0.2.6
   flutter_dotenv: ^2.1.0
   flutter_svg: ^0.19.1
+  flutter_swiper: ^1.1.6
+  flutter_simple_rating_bar: ^0.0.3
 
   #Map
   google_maps_flutter: ^1.0.6
@@ -31,6 +33,7 @@ dependencies:
   geolocator: ^6.1.7
   geocoder: ^0.2.1
   flutter_polyline_points: ^0.2.4
+
 
   #GetX
   get: ^3.17.1

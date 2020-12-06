@@ -82,7 +82,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                   meh == 'p' ? StringResources.chooseLocationHeader1 : StringResources.chooseLocationHeader1,
                   style: TextStyle(
                     fontSize: sizeConfig.getPixels(32),
-                    color: AppConst.themeBlue,
+                    color: AppConst.textBlue,
                     fontFamily: 'Roboto-M'
                   ),
                 ),
@@ -104,7 +104,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                   controller: addressController,
                   style: TextStyle(
                     fontSize: sizeConfig.getPixels(16),
-                    color: AppConst.themeBlue
+                    color: AppConst.textBlue
                   ),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(right: sizeConfig.width * 85,left: sizeConfig.width * 30),
@@ -190,7 +190,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
               style: TextStyle(
                 fontSize: sizeConfig.getPixels(32),
                 fontFamily: 'Roboto-M',
-                color: AppConst.themeBlue
+                color: AppConst.textBlue
               ),
             ),
             ListView.builder(
@@ -203,7 +203,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                   children: [
                     Icon(
                       Icons.favorite,
-                      color: AppConst.themeBlue,
+                      color: AppConst.textBlue,
                     ),
                     SizedBox(width: sizeConfig.width * 15,),
                     Column(
@@ -212,7 +212,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                         Text(
                           'Office',
                           style: TextStyle(
-                            color: AppConst.themeBlue,
+                            color: AppConst.textBlue,
                             fontSize: sizeConfig.getPixels(16),
                             fontFamily: 'Roboto-M',
                           ),
@@ -245,7 +245,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
               style: TextStyle(
                 fontSize: sizeConfig.getPixels(32),
                 fontFamily: 'Roboto-M',
-                color: AppConst.themeBlue
+                color: AppConst.textBlue
               ),
             ),
             ListView.builder(
@@ -257,7 +257,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                   children: [
                     Icon(
                       Icons.edit_location_sharp,
-                      color: AppConst.themeBlue,
+                      color: AppConst.textBlue,
                     ),
                     SizedBox(width: sizeConfig.width * 15,),
                     Container(
@@ -267,7 +267,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
-                          color: AppConst.themeBlue,
+                          color: AppConst.textBlue,
                           fontSize: sizeConfig.getPixels(16),
                           fontFamily: 'Roboto-R',
                         ),
