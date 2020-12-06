@@ -72,7 +72,9 @@ class RideResults extends StatelessWidget {
                       color = Color(0xffffffff);
                     }
                     return GestureDetector(
-                      onTap: ()=> Get.to(SingleRideResult(vehicleUrl: item.vehicleImage,)),
+                      onTap: ()=>
+                          Get.to(SingleRideResult(vehicleUrl: item.vehicleImage,),
+                      ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: height * 7),
                         child: Container(
@@ -152,7 +154,8 @@ class RideResults extends StatelessWidget {
                                   ],
                                 ),
                                 Hero(
-                                  tag: index,
+                                  tag: item.vehicleImage,
+
                                     child: CachedNetworkImage(
                                         imageUrl: item.vehicleImage,
                                         width: width * 260,

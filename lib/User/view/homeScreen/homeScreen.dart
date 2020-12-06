@@ -27,7 +27,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   CameraPosition initialCameraPosition;

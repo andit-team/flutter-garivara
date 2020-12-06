@@ -28,14 +28,12 @@ class _SingleRideResultState extends State<SingleRideResult> {
   }
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Hero(
-        tag: widget.vehicleUrl,
-        child: CachedNetworkImage(
-            imageUrl: widget.vehicleUrl,
-            width: width * 260,
-            height: height * 85),
-      ),
+    return Hero(
+      tag: widget.vehicleUrl,
+      child: CachedNetworkImage(
+          imageUrl: widget.vehicleUrl,
+          width: width * 260,
+          height: height * 85),
     );
   }
 }
