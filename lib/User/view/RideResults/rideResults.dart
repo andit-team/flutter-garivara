@@ -11,17 +11,12 @@ import 'package:get/get.dart';
 
 class RideResults extends StatelessWidget {
   final GetSizeConfig getSizeConfig = Get.find();
-  double width;
-  double height;
-
-  setInitialScreenSize() {
-    width = getSizeConfig.width.value;
-    height = getSizeConfig.height.value;
-  }
 
   @override
   Widget build(BuildContext context) {
-    setInitialScreenSize();
+
+    double width = getSizeConfig.width.value;
+    double height = getSizeConfig.height.value;
     return Scaffold(
       //extendBodyBehindAppBar: true,
       appBar: DrawerlessAppBar(
@@ -64,7 +59,7 @@ class RideResults extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: VehicleResultModel.vehicleResultModelData.length,
                   itemBuilder: (context, index) {
-                    var item = VehicleResultModel.vehicleResultModelData[index];
+                    VehicleResultModel item = VehicleResultModel.vehicleResultModelData[index];
                     Color color;
                     if (index % 2 == 0) {
                       color = Color(0xffE3E8F2);
@@ -72,7 +67,7 @@ class RideResults extends StatelessWidget {
                       color = Color(0xffffffff);
                     }
                     return GestureDetector(
-                      onTap: ()=> Get.to(SingleRideResult(vehicleUrl: item.vehicleImage,)),
+                      onTap: ()=> Get.to(SingleRideResult(),arguments: item),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: height * 7),
                         child: Container(
@@ -152,7 +147,7 @@ class RideResults extends StatelessWidget {
                                   ],
                                 ),
                                 Hero(
-                                  tag: index,
+                                  tag: item.vehicleImage,
                                     child: CachedNetworkImage(
                                         imageUrl: item.vehicleImage,
                                         width: width * 260,
