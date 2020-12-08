@@ -1,6 +1,5 @@
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
-import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/demo/demoData.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

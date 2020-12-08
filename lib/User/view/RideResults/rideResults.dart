@@ -19,7 +19,7 @@ class RideResults extends StatelessWidget {
     double height = getSizeConfig.height.value;
     return Scaffold(
       //extendBodyBehindAppBar: true,
-      appBar: DrawerlessAppBar(
+      appBar: DrawerLessAppBar(
         width: width,
         height: height,
       ),

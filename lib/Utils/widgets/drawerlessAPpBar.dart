@@ -3,12 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DrawerlessAppBar extends StatelessWidget implements PreferredSizeWidget{
+class DrawerLessAppBar extends StatelessWidget implements PreferredSizeWidget{
   final double height;
   final double width;
-  DrawerlessAppBar({
+  final Widget widget;
+  const DrawerLessAppBar({
     @required this.height,
     @required this.width,
+    this.widget
   });
   final String assetName = 'assets/images/svg/back.svg';
 
@@ -25,6 +27,10 @@ class DrawerlessAppBar extends StatelessWidget implements PreferredSizeWidget{
           onPressed: () => Get.back(),
           icon: svgIcon
       ),
+      actions: [
+        widget == null ? SizedBox() :
+            widget
+      ],
     );
   }
 

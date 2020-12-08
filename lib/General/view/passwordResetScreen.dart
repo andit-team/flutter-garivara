@@ -5,13 +5,11 @@ import 'package:get/get.dart';
 class ResetPassword extends StatelessWidget {
 
   final GetSizeConfig getSizeConfig = Get.find();
-  double width;
-  double height;
 
-  TextEditingController newPassword = TextEditingController();
-  TextEditingController confirmPassword = TextEditingController();
-  FocusNode newPasswordNode = FocusNode();
-  FocusNode confirmPasswordNode = FocusNode();
+  final TextEditingController newPassword = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+  final FocusNode newPasswordNode = FocusNode();
+  final FocusNode confirmPasswordNode = FocusNode();
 
   void dispose() {
     newPassword.dispose();
@@ -21,14 +19,10 @@ class ResetPassword extends StatelessWidget {
     newPasswordNode.dispose();
   }
 
-  setInitialScreenSize() {
-    width = getSizeConfig.width.value;
-    height = getSizeConfig.height.value;
-  }
-
   @override
   Widget build(BuildContext context) {
-    setInitialScreenSize();
+    final double width = getSizeConfig.width.value;
+    final double  height = getSizeConfig.height.value;
     return Scaffold(
       backgroundColor: Color(0xffffffff),
       body: Center(

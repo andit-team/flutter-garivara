@@ -12,6 +12,18 @@ class StringResources{
 
   static final String singeRideResultGetQuote = 'Get quote';
 
+  static final String getQuoteTitle = 'Tell us about your ride for a more cost estimation';
+  static final String getQuoteSubtitle = 'A little info will help the car owner driver to give you a cost estimation';
+  static final String getQuoteHeaderDate = 'Select your journey date';
+  static final String getQuoteHeaderPickupTime = 'Select your pickup time';
+  static final String getQuoteJourneyDuration = 'Choose your journey duration';
+  static final String getQuoteFuelPackage = 'Choose your fuel package type';
+  static final String getQuoteStartEnd = 'Choose journey start and end point';
+  static final String getQuoteFooter = 'Choose journey start and end point';
+
+
+  static final String costDetailsTitle = 'Check the total estimated cost and send request';
+  static final String costDetailsSubTitle = 'Check all info and send the cost estimation request to the car owner';
 
 
 

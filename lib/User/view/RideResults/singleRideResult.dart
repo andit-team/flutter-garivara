@@ -13,6 +13,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'getQuoteScreen.dart';
+
 class SingleRideResult extends StatefulWidget {
   @override
   _SingleRideResultState createState() => _SingleRideResultState();
@@ -38,7 +40,7 @@ class _SingleRideResultState extends State<SingleRideResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DrawerlessAppBar(
+      appBar: DrawerLessAppBar(
         height: height,
         width: width,
       ),
@@ -81,22 +83,28 @@ class _SingleRideResultState extends State<SingleRideResult> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: height*50,
-                        width: width * 250,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width*30),
-                            border: Border.all(
-                                color: AppConst.appBlue,
-                                width: 2
-                            )
-                        ),
-                        child: Center(
-                          child: Text(
-                            StringResources.singeRideResultGetQuote,
-                            style: TextStyle(
-                                color: AppConst.appBlue,
-                                fontSize: sizeConfig.getPixels(16)
+                      InkWell(
+                        onTap: (){
+                          Get.to(GetQuoteScreen());
+                        },
+                        borderRadius: BorderRadius.circular(width*30),
+                        child: Container(
+                          height: height*50,
+                          width: width * 250,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width*30),
+                              border: Border.all(
+                                  color: AppConst.appBlue,
+                                  width: 2
+                              )
+                          ),
+                          child: Center(
+                            child: Text(
+                              StringResources.singeRideResultGetQuote,
+                              style: TextStyle(
+                                  color: AppConst.appBlue,
+                                  fontSize: sizeConfig.getPixels(16)
+                              ),
                             ),
                           ),
                         ),

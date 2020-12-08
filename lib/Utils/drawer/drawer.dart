@@ -20,9 +20,9 @@ class MyDrawer extends StatelessWidget {
   });
 
 
-  GetSizeConfig getSizeConfig = Get.find();
+  final GetSizeConfig getSizeConfig = Get.find();
 
-  GetStorage localStorage = GetStorage();
+  final GetStorage localStorage = GetStorage();
 
   @override
   Widget build(BuildContext context) {
