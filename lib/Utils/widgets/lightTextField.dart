@@ -9,10 +9,12 @@ class LightTextField extends StatelessWidget {
   final TextInputType textInputType;
   final TextEditingController controller;
   final bool suffix;
+  final inputFormatter;
   LightTextField({
     @required this.hintText,
     this.enabled = false,
     this.suffix = false,
+    this.inputFormatter,
     this.textInputType = TextInputType.text,
     @required this.controller
 });
@@ -22,6 +24,7 @@ class LightTextField extends StatelessWidget {
       children: [
         TextField(
           keyboardType: textInputType,
+          inputFormatters: inputFormatter,
           controller: controller,
           enabled: enabled,
           decoration: InputDecoration(

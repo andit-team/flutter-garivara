@@ -24,7 +24,10 @@ class DrawerLessAppBar extends StatelessWidget implements PreferredSizeWidget{
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            Get.back();
+          },
           icon: svgIcon
       ),
       actions: [

@@ -7,6 +7,7 @@ import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/pickU
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
+import 'package:andgarivara/Utils/widgets/basicHeaderWidget.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: DrawerLessAppBar(
           height: sizeConfig.height.value,
           width: sizeConfig.width.value,
@@ -77,27 +79,10 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      StringResources.getQuoteTitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: sizeConfig.getPixels(28),
-                        fontWeight: FontWeight.bold,
-                        color: AppConst.textBlue
-                      ),
+                    BasicHeaderWidget(
+                      title: StringResources.getQuoteTitle,
+                      subtitle: StringResources.getQuoteSubtitle,
                     ),
-                    SizedBox(height: sizeConfig.height * 20,),
-                    Text(
-                      StringResources.getQuoteSubtitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: sizeConfig.getPixels(18),
-                        color: AppConst.textLight
-                      ),
-                    ),
-                    SizedBox(height: sizeConfig.height * 10,),
                     PickJourneyDateWidget(journeyDateController: journeyDateController),
                     PickUptimeWidget(pickUpTimeController: pickUpTimeController),
                     JourneyDurationWidget(timeController: timeController, durationTypeController: durationTypeController),

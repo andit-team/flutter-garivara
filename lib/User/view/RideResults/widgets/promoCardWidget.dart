@@ -1,7 +1,6 @@
 import 'package:andgarivara/Utils/Icons/ticket_icon_icons.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
-import 'package:andgarivara/Utils/widgets/checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ticketview/ticketview.dart';

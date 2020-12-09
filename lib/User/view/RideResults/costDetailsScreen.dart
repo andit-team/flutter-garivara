@@ -1,9 +1,11 @@
+import 'package:andgarivara/Payment/view/choosePaymentMethodScreen.dart';
 import 'package:andgarivara/User/view/RideResults/addPromoCodeScreen.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/costDetailsScreen/finalCostRowDataWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/costDetailsScreen/rowDataWidget.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
+import 'package:andgarivara/Utils/widgets/basicHeaderWidget.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
 import 'package:andgarivara/Utils/widgets/underLinedText.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,35 +17,19 @@ class CostDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: DrawerLessAppBar(
         height: sizeConfig.height.value,
         width: sizeConfig.width.value,
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20),vertical: sizeConfig.height * 15),
-        child: ListView(
+        child: Column(
           children: [
-            Text(
-              StringResources.costDetailsTitle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: sizeConfig.getPixels(28),
-                  fontWeight: FontWeight.bold,
-                  color: AppConst.textBlue
-              ),
+            BasicHeaderWidget(
+              title: StringResources.costDetailsTitle,
+              subtitle: StringResources.costDetailsSubTitle
             ),
-            SizedBox(height: sizeConfig.height * 20,),
-            Text(
-              StringResources.costDetailsSubTitle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: sizeConfig.getPixels(18),
-                  color: AppConst.textLight
-              ),
-            ),
-            SizedBox(height: sizeConfig.height * 10,),
             /// cost details
             Container(
               width: double.infinity,
@@ -125,7 +111,7 @@ class CostDetailsScreen extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: (){
-
+                      Get.to(ChoosePaymentMethodScreen());
                     },
                     borderRadius: BorderRadius.circular(sizeConfig.width * 10),
                     child: Container(

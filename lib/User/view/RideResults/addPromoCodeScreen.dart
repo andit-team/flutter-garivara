@@ -3,6 +3,7 @@ import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
 import 'package:andgarivara/Utils/widgets/lightTextField.dart';
+import 'package:andgarivara/Utils/widgets/wideRedButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,26 +63,11 @@ class AddPromoCodeScreen extends StatelessWidget {
                     enabled: true,
                   ),
                   SizedBox(height: sizeConfig.height * 20,),
-                  FlatButton(
+                  WideRedButton(
+                    label: 'Apply code',
                     onPressed: (){
 
-                    },
-                    height: sizeConfig.getPixels(45),
-                    minWidth: double.infinity,
-                    color: AppConst.appRed,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(sizeConfig.width* 15)
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Apply code',
-                        style: TextStyle(
-                            fontSize: sizeConfig.getPixels(20),
-                            fontFamily: 'Robot-M',
-                            color: Colors.white
-                        ),
-                      ),
-                    ),
+                    }
                   )
                 ],
               ),

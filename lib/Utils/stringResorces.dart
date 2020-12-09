@@ -30,6 +30,14 @@ class StringResources{
   static final String addPromoTitle = 'Add promo code';
 
 
+  static final String paymentMethodTitle = 'Payment method';
+  static final String paymentMethodSubtitle = 'Choose your suitable payment and confirm the request';
+
+
+  static final String addCardTitle = 'Add credit card';
+  static final String addCardSubtitle = 'Add your credit card as a payment method';
+
+
 
 
 

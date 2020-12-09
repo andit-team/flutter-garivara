@@ -67,6 +67,7 @@ flutter:
     - assets/images/svg/
     - assets/images/intro/
     - assets/images/appLogo/
+    - assets/images/paymentMethods/
     - assets/demo/
     - assets/icons/
 
