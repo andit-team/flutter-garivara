@@ -87,7 +87,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                         color: AppConst.textBlue
                       ),
                     ),
-                    SizedBox(height: sizeConfig.height * 10,),
+                    SizedBox(height: sizeConfig.height * 20,),
                     Text(
                       StringResources.getQuoteSubtitle,
                       maxLines: 2,

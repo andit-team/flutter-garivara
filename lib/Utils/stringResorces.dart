@@ -24,8 +24,10 @@ class StringResources{
 
   static final String costDetailsTitle = 'Check the total estimated cost and send request';
   static final String costDetailsSubTitle = 'Check all info and send the cost estimation request to the car owner';
+  static final String costDetailsFooter = 'All types of toll and ferry costs are not included with the total prize';
 
 
+  static final String addPromoTitle = 'Add promo code';
 
 
 
@@ -47,6 +49,7 @@ class StringResources{
   static final String driverImage = 'https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_956,h_637/v1597356373/assets/3b/978a73-4909-45ab-85ef-8f74f1beaf8e/original/desk2x-%281%29.jpg';
   static final String reviewerImage = 'https://thehauterfly.com/wp-content/uploads/2017/06/shutterstock_532554733.jpg';
   static final String review = 'I did a scheduled ride a couple of days ago for the next morning. It was move/relocation related. At the designed time of 7AM the app confirmed my scheduled request and that a drive was near. As I waited it appeared someone should be nearby.';
+
 
 
 }

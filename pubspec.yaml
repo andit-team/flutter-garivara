@@ -28,6 +28,7 @@ dependencies:
   flutter_simple_rating_bar: ^0.0.3
   intl: any
   awesome_dialog: ^1.2.1
+  ticketview: ^1.0.0
 
   #Map
   google_maps_flutter: ^1.0.6
@@ -67,6 +68,7 @@ flutter:
     - assets/images/intro/
     - assets/images/appLogo/
     - assets/demo/
+    - assets/icons/
 
   fonts:
     - family: Roboto-R
@@ -81,3 +83,6 @@ flutter:
     - family: Montserrat-Bold
       fonts:
         - asset: assets/fonts/Montserrat-Regular.ttf
+    - family:  TicketIcon
+      fonts:
+       - asset: assets/icons/TicketIcon.ttf
