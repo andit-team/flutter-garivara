@@ -1,6 +1,9 @@
 class StringResources{
   static final String homeScreenHint = 'To get specific cost add your destination perfectly';
+  static final String homeScreenRideProcessingTitle = 'We are processing your booking';
+  static final String homeScreenRideProcessingSubtitle = 'Your ride will start soon';
   static final String btnHomeSearchVehicle = 'Search vehicles';
+  static final String homeScreenRideFoundTitle = 'Your booking has been accepted';
 
 
   static final String chooseLocationHeader1 = 'Pickup location';

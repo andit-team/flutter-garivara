@@ -1,4 +1,4 @@
-import 'package:andgarivara/User/model/VehicleResultModel.dart';
+import 'file:///C:/Users/AndIT-15/StudioProjects/GariVara/lib/demo/VehicleResultModel.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/amenitiesWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/carDetails.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/description.dart';

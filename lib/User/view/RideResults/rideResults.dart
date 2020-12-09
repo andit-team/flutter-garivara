@@ -1,8 +1,8 @@
-import 'package:andgarivara/User/model/VehicleResultModel.dart';
 import 'package:andgarivara/User/view/RideResults/singleRideResult.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
 import 'package:andgarivara/Utils/widgets/overScroll.dart';
+import 'package:andgarivara/demo/VehicleResultModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

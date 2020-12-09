@@ -1,17 +1,24 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:andgarivara/User/view/RideResults/rideResults.dart';
 import 'package:andgarivara/User/view/homeScreen/chooseLocation.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/homeTopTextField.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/vehicleTypes.dart';
+import 'package:andgarivara/Utils/controller/rideStatusController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
+import 'package:andgarivara/Utils/enum.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
-import 'package:andgarivara/Utils/widgets/redButton.dart';
+import 'package:andgarivara/Utils/widgets/wideRedButton.dart';
+import 'package:andgarivara/Utils/widgets/wideWhiteButton.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_simple_rating_bar/flutter_simple_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,7 +34,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   CameraPosition initialCameraPosition;
@@ -47,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   bool loading = true;
 
   final GetSizeConfig sizeConfig = Get.find();
-
+  GetRideStatusController rideStatusController = Get.find();
   @override
   void initState() {
     super.initState();
@@ -59,21 +65,95 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     super.build(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
+      // TODO delete appbar in the end
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_1,color: Colors.red,),
+            onPressed: (){
+              rideStatusController.updateStatus(RideStatus.NONE);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_2,color: Colors.red,),
+            onPressed: (){
+              rideStatusController.updateStatus(RideStatus.PROCESSING);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_3,color: Colors.red,),
+            onPressed: (){
+              rideStatusController.updateStatus(RideStatus.FOUND);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_4,color: Colors.red,),
+            onPressed: (){
+              rideStatusController.updateStatus(RideStatus.RUNNING);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_5,color: Colors.red,),
+            onPressed: (){
+              rideStatusController.updateStatus(RideStatus.FINISHED);
+            },
+          ),
+        ],
+      ),
       body: Container(
         height: Get.height,
         width: double.infinity,
-        child: Stack(
+        child: Obx(()=>Stack(
           children: [
-            AnimatedCrossFade(
-              duration: AppConst.duration,
-              firstChild: Loader(),
-              secondChild: googleMap(),
-              crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            Stack(
+              children: [
+                AnimatedCrossFade(
+                  duration: AppConst.duration,
+                  firstChild: Loader(),
+                  secondChild: googleMap(),
+                  crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                ),
+                chooseLocation(),
+                rideStatusController.status.value == RideStatus.PROCESSING ? Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaY: 5,
+                      sigmaX: 5
+                    ),
+                    child: Container(color: Colors.black.withOpacity(0),),
+                  ),
+                ) : SizedBox()
+              ],
             ),
-            chooseLocation(),
-            bottomSheet(),
+            AnimatedPositioned(
+              bottom: 0,
+              duration: AppConst.duration,
+              child: AnimatedContainer(
+                duration: AppConst.duration,
+                constraints: BoxConstraints(
+                  maxWidth: Get.width,
+                  minWidth: Get.width,
+                  // maxHeight: Get.height * .25,
+                  minHeight: Get.height * .25,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(sizeConfig.width * 100),
+                        topLeft: Radius.circular(sizeConfig.width * 100)
+                    ),
+                    boxShadow: [
+                      AppConst.shadow
+                    ]
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15,horizontal: sizeConfig.getPixels(20)),
+                  child: bottomSheet(),
+                ),
+              ),
+            ),
           ],
-        ),
+        )),
       ),
     );
   }
@@ -145,61 +225,222 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   Widget bottomSheet(){
-    return AnimatedPositioned(
-      bottom: 0,
-      duration: AppConst.duration,
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: Get.width,
-          maxHeight: Get.height * .25
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(sizeConfig.width * 100),
-            topLeft: Radius.circular(sizeConfig.width * 100)
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[300],
-              blurRadius: 10,
-              offset: Offset(0,-3)
-            )
-          ]
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              selectVehicleType(),
-              Icon(
-                Icons.info_outline,
-                size: sizeConfig.getPixels(25),
-              ),
-              Text(
-                StringResources.homeScreenHint,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: sizeConfig.getPixels(14),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 55),
-                child: RedButton(
-                  title: StringResources.btnHomeSearchVehicle,
-                  function: (){
-                    Get.to(RideResults());
-                  }
-                ),
-              )
-            ],
-          ),
+
+    if(rideStatusController.status.value == RideStatus.NONE){
+      return statusNone();
+    }else if(rideStatusController.status.value == RideStatus.PROCESSING){
+      return statusProcessing();
+    }else if(rideStatusController.status.value == RideStatus.FOUND){
+      return statusFound();
+    }
+  }
+
+  Widget statusNone() => Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      selectVehicleType(),
+      Icon(
+        Icons.info_outline,
+        size: sizeConfig.getPixels(25),
+      ),
+      Text(
+        StringResources.homeScreenHint,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: sizeConfig.getPixels(14),
         ),
       ),
-    );
-  }
+      WideRedButton(
+          label: StringResources.btnHomeSearchVehicle,
+          onPressed: (){
+            Get.to(RideResults());
+          }
+      )
+    ],
+  );
+
+  Widget statusProcessing() => Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      SpinKitFadingCircle(
+        color: Colors.grey,
+      ),
+      Text(
+        StringResources.homeScreenRideProcessingTitle,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: sizeConfig.getPixels(20),
+          color: AppConst.textBlue
+        ),
+      ),
+      Text(
+        StringResources.homeScreenRideProcessingSubtitle,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: sizeConfig.getPixels(14),
+          color: AppConst.textBlue
+        ),
+      ),
+      WideRedButton(
+        label: 'Cancel booking',
+        onPressed: (){
+
+        }
+      )
+    ],
+  );
+
+  Widget statusFound() => Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      Text(
+        StringResources.homeScreenRideFoundTitle,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: sizeConfig.getPixels(20),
+          color: AppConst.textBlue,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Container(
+        color: AppConst.containerBg,
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: ExpansionTile(
+          childrenPadding: EdgeInsets.zero,
+          tilePadding: EdgeInsets.zero,
+          // trailing: SizedBox(),
+          title: Row(
+            children: [
+              Stack(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(
+                      StringResources.driverImage
+                    ),
+                    radius: sizeConfig.getPixels(30),
+                  ),
+                  Icon(
+                    Icons.verified_user,
+                    color: AppConst.appGreen,
+                  )
+                ],
+              ),
+              SizedBox(width: sizeConfig.width * 15,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'John Dove',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: sizeConfig.getPixels(18),
+                      fontFamily: 'Robot-M',
+                      color: AppConst.textBlue
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      RatingBar(
+                        rating: 3,
+                        icon:Icon(Icons.star,size:13,color: Colors.grey,),
+                        starCount: 5,
+                        spacing: 0.0,
+                        size: 13,
+                        isIndicator: false,
+                        allowHalfRating: true,
+                        color: AppConst.appBlue,
+                      ),
+                      Text(
+                        '(63 Rating)',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: sizeConfig.getPixels(14),
+                          color: AppConst.textBlue
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '4.93 out of 5',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: sizeConfig.getPixels(12),
+                      color: AppConst.textBlue
+                    ),
+                  ),
+                ],
+              ),
+              Spacer(),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: sizeConfig.height * 60,
+                    width: sizeConfig.width * 280,
+                    child: CachedNetworkImage(
+                      imageUrl: 'https://cdn.pixabay.com/photo/2012/04/12/23/48/car-30990__340.png',
+                      fit: BoxFit.cover,
+                    )
+                  ),
+                  Text(
+                    'Lamborghini X-100',
+                    style: TextStyle(
+                      fontSize: sizeConfig.getPixels(12),
+                      color: AppConst.textBlue
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+          children: [
+            CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(
+                  StringResources.driverImage
+              ),
+              radius: sizeConfig.getPixels(30),
+            ),
+            CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(
+                  StringResources.driverImage
+              ),
+              radius: sizeConfig.getPixels(30),
+            ),
+            CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(
+                  StringResources.driverImage
+              ),
+              radius: sizeConfig.getPixels(30),
+            ),
+          ],
+        ),
+      ),
+      Row(
+        children: [
+          Expanded(
+            child: WideWhiteButton(
+              label: 'Cancel',
+              onPressed: (){}
+            ),
+          ),
+          SizedBox(width: sizeConfig.width * 30,),
+          Expanded(
+            child: WideRedButton(
+              label: 'Confirm',
+              onPressed: (){}
+            ),
+          ),
+        ],
+      )
+    ],
+  );
 
   int selectedVehicle = 0;
 
@@ -377,6 +618,4 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       });
     }
   }
-
-
 }
