@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                 ),
                 chooseLocation(),
-                rideStatusController.status.value == RideStatus.PROCESSING ? Positioned.fill(
+                rideStatusController.status.value != RideStatus.NONE ? Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(
                       sigmaY: 5,
@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     return Container(
       width: double.infinity,
       height: Get.height * .75,
-      child: GoogleMap(
+      /*child: GoogleMap(
         compassEnabled: false,
         zoomControlsEnabled: true,
         zoomGesturesEnabled: true,
@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         markers: gMarker,
         onTap: setNewLocation,
         polylines: _polyLines,
-      ),
+      )*/
     );
   }
 
@@ -183,6 +183,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   LatLng pickUp;
   LatLng dropOff;
+
+  bool cancelRide = false;
 
   Widget chooseLocation(){
     return Positioned(
@@ -226,12 +228,14 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   Widget bottomSheet(){
 
-    if(rideStatusController.status.value == RideStatus.NONE){
+    if(rideStatusController.status.value == RideStatus.NONE && !cancelRide){
       return statusNone();
-    }else if(rideStatusController.status.value == RideStatus.PROCESSING){
+    }else if(rideStatusController.status.value == RideStatus.PROCESSING && !cancelRide){
       return statusProcessing();
-    }else if(rideStatusController.status.value == RideStatus.FOUND){
+    }else if(rideStatusController.status.value == RideStatus.FOUND && !cancelRide){
       return statusFound();
+    }else if(cancelRide){
+      return rideCancel();
     }
   }
 
@@ -285,9 +289,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       ),
       WideRedButton(
         label: 'Cancel booking',
-        onPressed: (){
-
-        }
+        onPressed: cancelRideRequest
       )
     ],
   );
@@ -308,6 +310,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       Container(
         color: AppConst.containerBg,
         padding: EdgeInsets.symmetric(horizontal: 8),
+        margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
         child: ExpansionTile(
           childrenPadding: EdgeInsets.zero,
           tilePadding: EdgeInsets.zero,
@@ -401,27 +404,176 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             ],
           ),
           children: [
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                  StringResources.driverImage
+            Container(
+              margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+              padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.grey
+                  ),
+                  bottom: BorderSide(
+                    color: Colors.grey
+                  ),
+                )
               ),
-              radius: sizeConfig.getPixels(30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(width: double.infinity,),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'From: ',
+                        style: TextStyle(
+                          fontSize: sizeConfig.getPixels(20),
+                          color: AppConst.textBlue,
+                          fontWeight: FontWeight.bold
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '61, Ahsan ahmed road, Khulna',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(18),
+                                color: AppConst.textLight,
+                                fontWeight: FontWeight.bold
+                            ),
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'To: ',
+                        style: TextStyle(
+                          fontSize: sizeConfig.getPixels(20),
+                          color: AppConst.textBlue,
+                          fontWeight: FontWeight.bold
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '61, Ahsan ahmed road, Khulna',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(18),
+                                color: AppConst.textLight,
+                                fontWeight: FontWeight.bold
+                            ),
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                  StringResources.driverImage
+            Container(
+              margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+              padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Payment method',
+                    style: TextStyle(
+                      fontSize: sizeConfig.getPixels(20),
+                      fontWeight: FontWeight.bold,
+                      color: AppConst.textBlue
+                    ),
+                  ),
+                  Text(
+                    'Payment method',
+                    style: TextStyle(
+                      fontSize: sizeConfig.getPixels(16),
+                        color: AppConst.textLight
+                    ),
+                  ),
+                ],
               ),
-              radius: sizeConfig.getPixels(30),
-            ),
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                  StringResources.driverImage
-              ),
-              radius: sizeConfig.getPixels(30),
             ),
           ],
         ),
       ),
+      Row(
+        children: [
+          Expanded(
+            child: WideWhiteButton(
+              label: 'Cancel',
+              onPressed: cancelRideRequest
+            ),
+          ),
+          SizedBox(width: sizeConfig.width * 30,),
+          Expanded(
+            child: WideRedButton(
+              label: 'Confirm',
+              onPressed: (){}
+            ),
+          ),
+        ],
+      )
+    ],
+  );
+
+
+  int selectedCancelReason;
+  Widget rideCancel() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      SizedBox(height: sizeConfig.height * 20,),
+      Text(
+        StringResources.homeScreenCancelRideTitle,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: sizeConfig.getPixels(20),
+          color: AppConst.textBlue,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Text(
+        StringResources.homeScreenCancelRideSubtitle,
+        style: TextStyle(
+          fontSize: sizeConfig.getPixels(16),
+          color: AppConst.textLight,
+        ),
+      ),
+      ListView.builder(
+        padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+        shrinkWrap: true,
+        itemCount: 6,
+        itemBuilder: (_, index){
+          return CheckboxListTile(
+            value: index == selectedCancelReason,
+            onChanged: (bool){
+              if(selectedCancelReason == index){
+                setState(() {
+                  selectedCancelReason = 100;
+                });
+              }else{
+                setState(() {
+                  selectedCancelReason = index;
+                });
+              }
+            },
+            title: Text(
+              'Cancel Reason No. ${index+1}',
+              style: TextStyle(
+                fontSize: sizeConfig.getPixels(16),
+                color: AppConst.textBlue
+              ),
+            ),
+          );
+        },
+      ),
+      selectedCancelReason ==5 ? TextField(
+        decoration: InputDecoration(
+            hintText: 'Other Reason'
+        ),
+      ) : SizedBox(),
       Row(
         children: [
           Expanded(
@@ -433,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           SizedBox(width: sizeConfig.width * 30,),
           Expanded(
             child: WideRedButton(
-              label: 'Confirm',
+              label: 'Submit',
               onPressed: (){}
             ),
           ),
@@ -617,5 +769,17 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         }
       });
     }
+  }
+
+
+
+
+
+
+
+  cancelRideRequest(){
+    setState(() {
+      cancelRide = !cancelRide;
+    });
   }
 }

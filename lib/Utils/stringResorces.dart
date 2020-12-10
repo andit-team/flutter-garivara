@@ -4,6 +4,8 @@ class StringResources{
   static final String homeScreenRideProcessingSubtitle = 'Your ride will start soon';
   static final String btnHomeSearchVehicle = 'Search vehicles';
   static final String homeScreenRideFoundTitle = 'Your booking has been accepted';
+  static final String homeScreenCancelRideTitle = 'Cancel your booking';
+  static final String homeScreenCancelRideSubtitle = 'Please let us know why you want to cancel the booking';
 
 
   static final String chooseLocationHeader1 = 'Pickup location';
