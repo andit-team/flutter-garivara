@@ -41,8 +41,6 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: DrawerLessAppBar(
-          height: sizeConfig.height.value,
-          width: sizeConfig.width.value,
           widget: Padding(
             padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
             child: InkWell(

@@ -21,10 +21,7 @@ class AddCreditCardScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: DrawerLessAppBar(
-          height: sizeConfig.height.value,
-          width: sizeConfig.width.value,
-        ),
+        appBar: DrawerLessAppBar(),
         body: SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
           child: Column(

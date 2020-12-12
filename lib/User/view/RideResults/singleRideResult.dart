@@ -40,10 +40,7 @@ class _SingleRideResultState extends State<SingleRideResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DrawerLessAppBar(
-        height: height,
-        width: width,
-      ),
+      appBar: DrawerLessAppBar(),
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
         child: Column(

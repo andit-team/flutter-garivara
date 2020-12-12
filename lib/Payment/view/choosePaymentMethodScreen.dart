@@ -19,8 +19,6 @@ class ChoosePaymentMethodScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: DrawerLessAppBar(
-        height: sizeConfig.height.value,
-        width: sizeConfig.width.value,
         widget: Padding(
           padding: const EdgeInsets.all(8.0),
           child: FlatButton(

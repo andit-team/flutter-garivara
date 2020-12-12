@@ -20,10 +20,7 @@ class AddPromoCodeScreen extends StatelessWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: DrawerLessAppBar(
-        height: sizeConfig.height.value,
-        width: sizeConfig.width.value,
-      ),
+      appBar: DrawerLessAppBar(),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

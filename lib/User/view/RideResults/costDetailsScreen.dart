@@ -18,10 +18,7 @@ class CostDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: DrawerLessAppBar(
-        height: sizeConfig.height.value,
-        width: sizeConfig.width.value,
-      ),
+      appBar: DrawerLessAppBar(),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20),vertical: sizeConfig.height * 15),
         child: Column(

@@ -5,10 +5,12 @@ import 'package:andgarivara/User/view/RideResults/rideResults.dart';
 import 'package:andgarivara/User/view/homeScreen/chooseLocation.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/homeTopTextField.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/vehicleTypes.dart';
+import 'package:andgarivara/User/view/reviewRideScreen.dart';
 import 'package:andgarivara/Utils/controller/rideStatusController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:andgarivara/Utils/enum.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
+import 'package:andgarivara/Utils/widgets/lightTextField.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
 import 'package:andgarivara/Utils/widgets/wideRedButton.dart';
 import 'package:andgarivara/Utils/widgets/wideWhiteButton.dart';
@@ -49,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   TextEditingController pickUpLocation = TextEditingController();
   TextEditingController dropOffLocation = TextEditingController();
+
+  TextEditingController cancelReason = TextEditingController();
 
   bool loading = true;
 
@@ -114,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                 ),
                 chooseLocation(),
-                rideStatusController.status.value != RideStatus.NONE ? Positioned.fill(
+                rideStatusController.status.value == RideStatus.PROCESSING ? Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(
                       sigmaY: 5,
@@ -228,42 +232,76 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   Widget bottomSheet(){
 
-    if(rideStatusController.status.value == RideStatus.NONE && !cancelRide){
+    if(rideStatusController.status.value == RideStatus.NONE){
       return statusNone();
-    }else if(rideStatusController.status.value == RideStatus.PROCESSING && !cancelRide){
+    }else if(rideStatusController.status.value == RideStatus.PROCESSING){
       return statusProcessing();
-    }else if(rideStatusController.status.value == RideStatus.FOUND && !cancelRide){
+    }else if(rideStatusController.status.value == RideStatus.FOUND){
       return statusFound();
-    }else if(cancelRide){
-      return rideCancel();
+    }else if(rideStatusController.status.value == RideStatus.RUNNING){
+      return statusRunning();
+    }else{
+      return statusFinished();
     }
   }
 
-  Widget statusNone() => Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      selectVehicleType(),
-      Icon(
-        Icons.info_outline,
-        size: sizeConfig.getPixels(25),
-      ),
-      Text(
-        StringResources.homeScreenHint,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: sizeConfig.getPixels(14),
+  ///   STATUS NONE
+  Widget statusNone() => Padding(
+    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        selectVehicleType(),
+        Icon(
+          Icons.info_outline,
+          size: sizeConfig.getPixels(25),
         ),
-      ),
-      WideRedButton(
-          label: StringResources.btnHomeSearchVehicle,
-          onPressed: (){
-            Get.to(RideResults());
-          }
-      )
-    ],
+        Text(
+          StringResources.homeScreenHint,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: sizeConfig.getPixels(14),
+          ),
+        ),
+        WideRedButton(
+            label: StringResources.btnHomeSearchVehicle,
+            onPressed: (){
+              Get.to(RideResults());
+            }
+        )
+      ],
+    ),
   );
+  int selectedVehicle = 0;
+  Widget selectVehicleType(){
+    return Container(
+      height: sizeConfig.height * 70,
+      padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 35),
+      child: ListView.builder(
+        itemCount: 10,
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 10),
+        shrinkWrap: true,
+        itemBuilder: (_,index){
+          return carType(index);
+        },
+      ),
+    );
+  }
+  Widget carType(int index){
+    bool selected = selectedVehicle == index;
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          selectedVehicle = index;
+        });
+      },
+      child: VehicleTypesCard(selected: selected,),
+    );
+  }
 
+  ///   STATUS PROCESSING LOOKING FOR VEHICLE
   Widget statusProcessing() => Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -294,335 +332,757 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     ],
   );
 
-  Widget statusFound() => Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: [
-      Text(
-        StringResources.homeScreenRideFoundTitle,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: sizeConfig.getPixels(20),
-          color: AppConst.textBlue,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      Container(
-        color: AppConst.containerBg,
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-        child: ExpansionTile(
-          childrenPadding: EdgeInsets.zero,
-          tilePadding: EdgeInsets.zero,
-          // trailing: SizedBox(),
-          title: Row(
+  /// STATUS RIDE FOUND / CANCEL RIDE
+  int selectedCancelReason;
+  Widget statusFound() => Padding(
+    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        AnimatedCrossFade(
+          /// accept
+          firstChild: Column(
             children: [
-              Stack(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                      StringResources.driverImage
-                    ),
-                    radius: sizeConfig.getPixels(30),
-                  ),
-                  Icon(
-                    Icons.verified_user,
-                    color: AppConst.appGreen,
-                  )
-                ],
+              Text(
+                StringResources.homeScreenRideFoundTitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: sizeConfig.getPixels(20),
+                  color: AppConst.textBlue,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              SizedBox(width: sizeConfig.width * 15,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'John Dove',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: sizeConfig.getPixels(18),
-                      fontFamily: 'Robot-M',
-                      color: AppConst.textBlue
-                    ),
-                  ),
-                  Row(
+              Container(
+                color: AppConst.containerBg,
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                child: ExpansionTile(
+                  childrenPadding: EdgeInsets.zero,
+                  tilePadding: EdgeInsets.zero,
+                  // trailing: SizedBox(),
+                  title: Row(
                     children: [
-                      RatingBar(
-                        rating: 3,
-                        icon:Icon(Icons.star,size:13,color: Colors.grey,),
-                        starCount: 5,
-                        spacing: 0.0,
-                        size: 13,
-                        isIndicator: false,
-                        allowHalfRating: true,
-                        color: AppConst.appBlue,
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                                StringResources.driverImage
+                            ),
+                            radius: sizeConfig.getPixels(30),
+                          ),
+                          Icon(
+                            Icons.verified_user,
+                            color: AppConst.appGreen,
+                          )
+                        ],
                       ),
+                      SizedBox(width: sizeConfig.width * 15,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'John Dove',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(18),
+                                fontFamily: 'Robot-M',
+                                color: AppConst.textBlue
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              RatingBar(
+                                rating: 3,
+                                icon:Icon(Icons.star,size:13,color: Colors.grey,),
+                                starCount: 5,
+                                spacing: 0.0,
+                                size: 13,
+                                isIndicator: false,
+                                allowHalfRating: true,
+                                color: AppConst.appBlue,
+                              ),
+                              Text(
+                                '(63 Rating)',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: sizeConfig.getPixels(14),
+                                    color: AppConst.textBlue
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '4.93 out of 5',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(12),
+                                color: AppConst.textBlue
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                              height: sizeConfig.height * 60,
+                              width: sizeConfig.width * 280,
+                              child: CachedNetworkImage(
+                                imageUrl: 'https://cdn.pixabay.com/photo/2012/04/12/23/48/car-30990__340.png',
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                          Text(
+                            'Lamborghini X-100',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(12),
+                                color: AppConst.textBlue
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                      padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                      decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                                color: Colors.grey
+                            ),
+                            bottom: BorderSide(
+                                color: Colors.grey
+                            ),
+                          )
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(width: double.infinity,),
+                          ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(
+                              Icons.my_location_sharp,
+                              color: AppConst.appRed,
+                            ),
+                            title: Text(
+                              '61, Ahsan ahmed road, Khulna',
+                              style: TextStyle(
+                                color: AppConst.textBlue
+                              ),
+                            ),
+                            subtitle: Text(
+                              '10 Dec 2020 - 10:00AM',
+                              style: TextStyle(
+                                color: AppConst.textBlue
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(
+                              Icons.my_location_sharp,
+                              color: AppConst.appRed,
+                            ),
+                            title: Text(
+                              '61, Ahsan ahmed road, Khulna',
+                              style: TextStyle(
+                                color: AppConst.textBlue
+                              ),
+                            ),
+                            subtitle: Text(
+                              '10 Dec 2020 - 10:00AM',
+                              style: TextStyle(
+                                color: AppConst.textBlue
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                      padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Payment method',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(20),
+                                fontWeight: FontWeight.bold,
+                                color: AppConst.textBlue
+                            ),
+                          ),
+                          Text(
+                            'Payment method',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(16),
+                                color: AppConst.textLight
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          /// cancel ride
+          secondChild: Column(
+            children: [
+              SizedBox(height: sizeConfig.height * 20,),
+              Text(
+                StringResources.homeScreenCancelRideTitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: sizeConfig.getPixels(20),
+                  color: AppConst.textBlue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                StringResources.homeScreenCancelRideSubtitle,
+                style: TextStyle(
+                  fontSize: sizeConfig.getPixels(16),
+                  color: AppConst.textLight,
+                ),
+              ),
+              ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                shrinkWrap: true,
+                itemCount: 6,
+                itemBuilder: (_, index){
+                  return CheckboxListTile(
+                    value: index == selectedCancelReason,
+                    onChanged: (bool){
+                      if(selectedCancelReason == index){
+                        setState(() {
+                          selectedCancelReason = 100;
+                        });
+                      }else{
+                        setState(() {
+                          selectedCancelReason = index;
+                        });
+                      }
+                    },
+                    title: Text(
+                      'Cancel Reason No. ${index+1}',
+                      style: TextStyle(
+                          fontSize: sizeConfig.getPixels(16),
+                          color: AppConst.textBlue
+                      ),
+                    ),
+                  );
+                },
+              ),
+              selectedCancelReason ==5 ?
+              Padding(
+                padding: EdgeInsets.only(bottom: sizeConfig.height * 15),
+                child: LightTextField(
+                  hintText: 'Please explain your reson to reject this ride...',
+                  controller: cancelReason,
+                  minLines: 4,
+                  enabled: true,
+                ),
+              )
+                  : SizedBox(),
+            ],
+          ),
+          crossFadeState: cancelRide ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          duration: AppConst.duration
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: WideWhiteButton(
+                label: 'Cancel',
+                onPressed: cancelRideRequest
+              ),
+            ),
+            SizedBox(width: sizeConfig.width * 30,),
+            Expanded(
+              child: WideRedButton(
+                label: cancelRide ? 'Submit' : 'Confirm',
+                onPressed: (){
+                  if(cancelRide){
+                    cancelRide = !cancelRide;
+                    rideStatusController.updateStatus(RideStatus.NONE);
+                  }
+                }
+              ),
+            ),
+          ],
+        )
+      ],
+    ),
+  );
+
+  /// STATUS RUNNING
+  Widget statusRunning(){
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+      child: Column(
+        children: [
+          Text(
+            StringResources.homeScreenRunningRide,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: sizeConfig.getPixels(20),
+              color: AppConst.textBlue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Container(
+            color: AppConst.containerBg,
+            padding: EdgeInsets.all(8),
+            margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 20),
+            child: Row(
+              children: [
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: CachedNetworkImageProvider(
+                          StringResources.driverImage
+                      ),
+                      radius: sizeConfig.getPixels(30),
+                    ),
+                    Icon(
+                      Icons.verified_user,
+                      color: AppConst.appGreen,
+                    )
+                  ],
+                ),
+                SizedBox(width: sizeConfig.width * 15,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'John Dove',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: sizeConfig.getPixels(18),
+                          fontFamily: 'Robot-M',
+                          color: AppConst.textBlue
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        RatingBar(
+                          rating: 3,
+                          icon:Icon(Icons.star,size:13,color: Colors.grey,),
+                          starCount: 5,
+                          spacing: 0.0,
+                          size: 13,
+                          isIndicator: false,
+                          allowHalfRating: true,
+                          color: AppConst.appBlue,
+                        ),
+                        Text(
+                          '(63 Rating)',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: sizeConfig.getPixels(14),
+                              color: AppConst.textBlue
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '4.93 out of 5',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: sizeConfig.getPixels(12),
+                          color: AppConst.textBlue
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        height: sizeConfig.height * 60,
+                        width: sizeConfig.width * 280,
+                        child: CachedNetworkImage(
+                          imageUrl: 'https://cdn.pixabay.com/photo/2012/04/12/23/48/car-30990__340.png',
+                          fit: BoxFit.cover,
+                        )
+                    ),
+                    Text(
+                      'Lamborghini X-100',
+                      style: TextStyle(
+                          fontSize: sizeConfig.getPixels(12),
+                          color: AppConst.textBlue
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          WideRedButton(
+            onPressed: (){},
+            label: 'Trip Running',
+          )
+        ],
+      ),
+    );
+  }
+
+  /// STATUS FINISHED
+  Widget statusFinished(){
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+      child: Column(
+        children: [
+          Text(
+            StringResources.homeScreenRideFinished,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: sizeConfig.getPixels(20),
+              color: AppConst.textBlue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+            child: ExpansionTile(
+              childrenPadding: EdgeInsets.zero,
+              tilePadding: EdgeInsets.zero,
+              initiallyExpanded: true,
+              trailing: SizedBox(),
+              title: Row(
+                children: [
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(
+                            StringResources.driverImage
+                        ),
+                        radius: sizeConfig.getPixels(30),
+                      ),
+                      Icon(
+                        Icons.verified_user,
+                        color: AppConst.appGreen,
+                      )
+                    ],
+                  ),
+                  SizedBox(width: sizeConfig.width * 15,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        '(63 Rating)',
+                        'John Dove',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: sizeConfig.getPixels(14),
-                          color: AppConst.textBlue
+                            fontSize: sizeConfig.getPixels(18),
+                            fontFamily: 'Robot-M',
+                            color: AppConst.textBlue
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          RatingBar(
+                            rating: 3,
+                            icon:Icon(Icons.star,size:13,color: Colors.grey,),
+                            starCount: 5,
+                            spacing: 0.0,
+                            size: 13,
+                            isIndicator: false,
+                            allowHalfRating: true,
+                            color: AppConst.appBlue,
+                          ),
+                          Text(
+                            '(63 Rating)',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(14),
+                                color: AppConst.textBlue
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '4.93 out of 5',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: sizeConfig.getPixels(12),
+                            color: AppConst.textBlue
                         ),
                       ),
                     ],
                   ),
-                  Text(
-                    '4.93 out of 5',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: sizeConfig.getPixels(12),
-                      color: AppConst.textBlue
-                    ),
-                  ),
-                ],
-              ),
-              Spacer(),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: sizeConfig.height * 60,
-                    width: sizeConfig.width * 280,
-                    child: CachedNetworkImage(
-                      imageUrl: 'https://cdn.pixabay.com/photo/2012/04/12/23/48/car-30990__340.png',
-                      fit: BoxFit.cover,
-                    )
-                  ),
-                  Text(
-                    'Lamborghini X-100',
-                    style: TextStyle(
-                      fontSize: sizeConfig.getPixels(12),
-                      color: AppConst.textBlue
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-              padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.grey
-                  ),
-                  bottom: BorderSide(
-                    color: Colors.grey
-                  ),
-                )
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(width: double.infinity,),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'From: ',
+                  Spacer(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          height: sizeConfig.height * 60,
+                          width: sizeConfig.width * 280,
+                          child: CachedNetworkImage(
+                            imageUrl: 'https://cdn.pixabay.com/photo/2012/04/12/23/48/car-30990__340.png',
+                            fit: BoxFit.cover,
+                          )
+                      ),
+                      Text(
+                        'Lamborghini X-100',
                         style: TextStyle(
-                          fontSize: sizeConfig.getPixels(20),
-                          color: AppConst.textBlue,
-                          fontWeight: FontWeight.bold
+                            fontSize: sizeConfig.getPixels(12),
+                            color: AppConst.textBlue
                         ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                            color: Colors.grey
+                        ),
+                        bottom: BorderSide(
+                            color: Colors.grey
+                        ),
+                      )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(width: double.infinity,),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.my_location_sharp,
+                          color: AppConst.appRed,
+                        ),
+                        title: Text(
+                          '61, Ahsan ahmed road, Khulna',
+                          style: TextStyle(
+                              color: AppConst.textBlue
+                          ),
+                        ),
+                        subtitle: Text(
+                          '10 Dec 2020 - 10:00AM',
+                          style: TextStyle(
+                              color: AppConst.textBlue
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.my_location_sharp,
+                          color: AppConst.appRed,
+                        ),
+                        title: Text(
+                          '61, Ahsan ahmed road, Khulna',
+                          style: TextStyle(
+                              color: AppConst.textBlue
+                          ),
+                        ),
+                        subtitle: Text(
+                          '10 Dec 2020 - 10:00AM',
+                          style: TextStyle(
+                              color: AppConst.textBlue
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: double.infinity,),
+                      Text(
+                        'Trip fare',
+                        style: TextStyle(
+                            fontSize: sizeConfig.getPixels(20),
+                            fontFamily: 'Roboto-M',
+                            color: AppConst.textBlue
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextSpan(
-                            text: '61, Ahsan ahmed road, Khulna',
+                          Text(
+                            'Payment method: ',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(16),
+                                color: AppConst.textLight
+                            ),
+                          ),
+                          Text(
+                            'Card',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(16),
+                                color: AppConst.textBlue
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: sizeConfig.height  *15,),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total Amount: ',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(16),
+                                color: AppConst.textLight
+                            ),
+                          ),
+                          Text(
+                            'BDT 8856.55',
+                            style: TextStyle(
+                                fontSize: sizeConfig.getPixels(16),
+                                color: AppConst.textBlue
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 5),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Commission: ',
+                              style: TextStyle(
+                                  fontSize: sizeConfig.getPixels(16),
+                                  color: AppConst.textLight
+                              ),
+                            ),
+                            Text(
+                              'BDT 856.55',
+                              style: TextStyle(
+                                  fontSize: sizeConfig.getPixels(16),
+                                  color: AppConst.textBlue
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Grand Total: ',
                             style: TextStyle(
                                 fontSize: sizeConfig.getPixels(18),
-                                color: AppConst.textLight,
-                                fontWeight: FontWeight.bold
+                                color: AppConst.textBlue
                             ),
-                          )
-                        ]
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'To: ',
-                        style: TextStyle(
-                          fontSize: sizeConfig.getPixels(20),
-                          color: AppConst.textBlue,
-                          fontWeight: FontWeight.bold
-                        ),
-                        children: [
-                          TextSpan(
-                            text: '61, Ahsan ahmed road, Khulna',
+                          ),
+                          Text(
+                            'BDT 8000.00',
                             style: TextStyle(
                                 fontSize: sizeConfig.getPixels(18),
-                                color: AppConst.textLight,
-                                fontWeight: FontWeight.bold
+                                color: AppConst.textBlue
                             ),
-                          )
-                        ]
+                          ),
+                        ],
                       ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Get.to(ReviewRideScreen());
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(top: sizeConfig.height * 15),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                            color: Colors.grey
+                        ),
+                      )
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(width: double.infinity,),
+                        Text(
+                          StringResources.homeScreenRideFinishedReviewTitle,
+                          style: TextStyle(
+                              fontSize: sizeConfig.getPixels(20),
+                              fontFamily: 'Roboto-M',
+                              color: AppConst.textBlue
+                          ),
+                        ),
+                        Text(
+                          StringResources.homeScreenRideFinishedReviewSubtitle,
+                          style: TextStyle(
+                            fontSize: sizeConfig.getPixels(16),
+                            color: AppConst.textLight
+                          ),
+                        ),
+                        SizedBox(height: sizeConfig.height  *15,),
+                        Center(
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: RatingBar(
+                              rating: 5,
+                              icon:Icon(Icons.star,size:25,color: Colors.grey,),
+                              starCount: 5,
+                              spacing: 5.0,
+                              size: 25,
+                              isIndicator: false,
+                              allowHalfRating: true,
+                              color: AppConst.appBlue,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-              padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Payment method',
-                    style: TextStyle(
-                      fontSize: sizeConfig.getPixels(20),
-                      fontWeight: FontWeight.bold,
-                      color: AppConst.textBlue
-                    ),
-                  ),
-                  Text(
-                    'Payment method',
-                    style: TextStyle(
-                      fontSize: sizeConfig.getPixels(16),
-                        color: AppConst.textLight
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      Row(
-        children: [
-          Expanded(
-            child: WideWhiteButton(
-              label: 'Cancel',
-              onPressed: cancelRideRequest
-            ),
-          ),
-          SizedBox(width: sizeConfig.width * 30,),
-          Expanded(
-            child: WideRedButton(
-              label: 'Confirm',
-              onPressed: (){}
+                ),
+              ],
             ),
           ),
         ],
-      )
-    ],
-  );
-
-
-  int selectedCancelReason;
-  Widget rideCancel() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: [
-      SizedBox(height: sizeConfig.height * 20,),
-      Text(
-        StringResources.homeScreenCancelRideTitle,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: sizeConfig.getPixels(20),
-          color: AppConst.textBlue,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      Text(
-        StringResources.homeScreenCancelRideSubtitle,
-        style: TextStyle(
-          fontSize: sizeConfig.getPixels(16),
-          color: AppConst.textLight,
-        ),
-      ),
-      ListView.builder(
-        padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-        shrinkWrap: true,
-        itemCount: 6,
-        itemBuilder: (_, index){
-          return CheckboxListTile(
-            value: index == selectedCancelReason,
-            onChanged: (bool){
-              if(selectedCancelReason == index){
-                setState(() {
-                  selectedCancelReason = 100;
-                });
-              }else{
-                setState(() {
-                  selectedCancelReason = index;
-                });
-              }
-            },
-            title: Text(
-              'Cancel Reason No. ${index+1}',
-              style: TextStyle(
-                fontSize: sizeConfig.getPixels(16),
-                color: AppConst.textBlue
-              ),
-            ),
-          );
-        },
-      ),
-      selectedCancelReason ==5 ? TextField(
-        decoration: InputDecoration(
-            hintText: 'Other Reason'
-        ),
-      ) : SizedBox(),
-      Row(
-        children: [
-          Expanded(
-            child: WideWhiteButton(
-              label: 'Cancel',
-              onPressed: (){}
-            ),
-          ),
-          SizedBox(width: sizeConfig.width * 30,),
-          Expanded(
-            child: WideRedButton(
-              label: 'Submit',
-              onPressed: (){}
-            ),
-          ),
-        ],
-      )
-    ],
-  );
-
-  int selectedVehicle = 0;
-
-  Widget selectVehicleType(){
-    return Container(
-      height: sizeConfig.height * 70,
-      padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 35),
-      child: ListView.builder(
-        itemCount: 10,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 10),
-        shrinkWrap: true,
-        itemBuilder: (_,index){
-          return carType(index);
-        },
       ),
     );
   }
 
-  Widget carType(int index){
-    bool selected = selectedVehicle == index;
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          selectedVehicle = index;
-        });
-      },
-      child: VehicleTypesCard(selected: selected,),
-    );
-  }
 
 
 

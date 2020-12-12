@@ -10,12 +10,18 @@ class LightTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool suffix;
   final inputFormatter;
+  final Color hintColor;
+  int minLines;
+  int maxLines;
   LightTextField({
     @required this.hintText,
     this.enabled = false,
     this.suffix = false,
     this.inputFormatter,
+    this.minLines = 1,
+    this.maxLines = 10,
     this.textInputType = TextInputType.text,
+    this.hintColor,
     @required this.controller
 });
   @override
@@ -27,10 +33,12 @@ class LightTextField extends StatelessWidget {
           inputFormatters: inputFormatter,
           controller: controller,
           enabled: enabled,
+          minLines: minLines,
+          maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(
-              color: Color(0xffD2D2D2)
+              color: hintColor ?? Color(0xffD2D2D2)
             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(
@@ -68,7 +76,7 @@ class LightTextField extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(sizeConfig.width * 20),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 25)
+            contentPadding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 25,vertical: sizeConfig.height * 10)
           ),
         ),
         suffix ? Positioned(

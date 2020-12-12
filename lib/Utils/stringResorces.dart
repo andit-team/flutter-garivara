@@ -6,6 +6,10 @@ class StringResources{
   static final String homeScreenRideFoundTitle = 'Your booking has been accepted';
   static final String homeScreenCancelRideTitle = 'Cancel your booking';
   static final String homeScreenCancelRideSubtitle = 'Please let us know why you want to cancel the booking';
+  static final String homeScreenRunningRide = 'You booking has been Confirmed';
+  static final String homeScreenRideFinished = 'Ride Finished, Thank you for choosing AndGarivara';
+  static final String homeScreenRideFinishedReviewTitle = 'How was your trip?';
+  static final String homeScreenRideFinishedReviewSubtitle = 'What do you think about the ride';
 
 
   static final String chooseLocationHeader1 = 'Pickup location';
@@ -13,6 +17,11 @@ class StringResources{
   static final String chooseLocationMapHint = 'Tap to select from the map';
   static final String chooseLocationFavPlace = 'Favorite places';
   static final String chooseLocationRecentlyPlace = 'Recently visited places';
+
+  static final String rideReviewTitle = 'Rate and review the Car';
+  static final String rideReviewSubtitle = 'What do you think about the Car';
+  static final String rideReviewDriverTitle = 'Rate and review the Driver';
+  static final String rideReviewDriverSubtitle = 'What do you think about the Driver';
 
 
   static final String singeRideResultGetQuote = 'Get quote';

@@ -19,10 +19,7 @@ class RideResults extends StatelessWidget {
     double height = getSizeConfig.height.value;
     return Scaffold(
       //extendBodyBehindAppBar: true,
-      appBar: DrawerLessAppBar(
-        width: width,
-        height: height,
-      ),
+      appBar: DrawerLessAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 70),
         child: OverScroll(
