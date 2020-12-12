@@ -52,8 +52,9 @@ class StringResources{
   static final String addCardSubtitle = 'Add your credit card as a payment method';
 
 
-
-
+  static final String profileScreenContact = 'Contact details';
+  static final String profileScreenSecurity = 'Security details';
+  static final String profileScreenLanguage = 'Language';
 
 
 
