@@ -1,4 +1,5 @@
-import 'package:andgarivara/General/view/signInScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/myRidesScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/newsAndOffersScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/profileScreen.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
@@ -6,7 +7,6 @@ import 'package:andgarivara/Utils/drawer/widget/logoutDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class MyDrawer extends StatelessWidget {
   final double height;
@@ -191,7 +191,8 @@ final List<DrawerItems> drawerItems = [
   ),
   DrawerItems(
     title: 'My Rides',
-    icon: Icons.car_repair
+    icon: Icons.car_repair,
+    navigation: MyRidesScreen()
   ),
   DrawerItems(
     title: 'My favourite place',
@@ -199,6 +200,7 @@ final List<DrawerItems> drawerItems = [
   ),
   DrawerItems(
     title: 'News and offers',
-    icon: Icons.new_releases
+    icon: Icons.new_releases,
+    navigation: NewsAndOffersScreen()
   ),
 ];

@@ -1,4 +1,3 @@
-import 'file:///C:/Users/AndIT-15/StudioProjects/GariVara/lib/demo/VehicleResultModel.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/amenitiesWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/carDetails.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/description.dart';
@@ -8,6 +7,7 @@ import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
+import 'package:andgarivara/demo/VehicleResultModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

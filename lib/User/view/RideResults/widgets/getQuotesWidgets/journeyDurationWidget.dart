@@ -1,4 +1,3 @@
-import 'package:andgarivara/User/view/RideResults/funcs/getQuotesFuncs.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';

@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     return Container(
       width: double.infinity,
       height: Get.height * .75,
-      /*child: GoogleMap(
+      child: GoogleMap(
         compassEnabled: false,
         zoomControlsEnabled: true,
         zoomGesturesEnabled: true,
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         markers: gMarker,
         onTap: setNewLocation,
         polylines: _polyLines,
-      )*/
+      )
     );
   }
 
@@ -200,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           children: [
             HomeTextField(
               onTap: () async{
+                print('123');
                 pickUpAddress = await Get.to(ChooseLocationScreen(),arguments: 'p');
                 if(pickUpAddress != null){
                   pickUpLocation.text = pickUpAddress.addressLine;
@@ -213,6 +214,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             ),
             HomeTextField(
               onTap: () async{
+                print('444');
                 dropOffAddress = await Get.to(ChooseLocationScreen(),arguments: 'd');
                 if(dropOffAddress != null){
                   dropOffLocation.text = dropOffAddress.addressLine;

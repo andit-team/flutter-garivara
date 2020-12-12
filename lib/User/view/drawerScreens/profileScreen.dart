@@ -1,6 +1,6 @@
-import 'package:andgarivara/User/view/drawerScreens/widgets/profileScreen/title.dart';
-import 'package:andgarivara/User/view/drawerScreens/widgets/profileScreen/titleWithTextBoxWidget.dart';
-import 'package:andgarivara/User/view/drawerScreens/widgets/profileScreen/titleWithTextButton.dart';
+import 'package:andgarivara/User/view/drawerScreens/widgets/profileScreenWidgets/title.dart';
+import 'package:andgarivara/User/view/drawerScreens/widgets/profileScreenWidgets/titleWithTextBoxWidget.dart';
+import 'package:andgarivara/User/view/drawerScreens/widgets/profileScreenWidgets/titleWithTextButton.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';

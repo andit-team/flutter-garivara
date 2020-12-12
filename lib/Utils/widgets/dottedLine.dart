@@ -154,7 +154,9 @@ class _FDottedLineState extends State<FDottedLine> {
             childHeight = tempHeight;
           });
         }
-      } catch (e, stack) {}
+      } catch (e) {
+        print(e.toString());
+      }
     });
   }
 

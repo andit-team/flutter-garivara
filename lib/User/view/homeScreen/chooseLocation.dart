@@ -74,7 +74,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  meh == 'p' ? StringResources.chooseLocationHeader1 : StringResources.chooseLocationHeader1,
+                  meh == 'p' ? StringResources.chooseLocationHeader1 : StringResources.chooseLocationHeader2,
                   style: TextStyle(
                     fontSize: sizeConfig.getPixels(32),
                     color: AppConst.textBlue,
