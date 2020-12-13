@@ -28,7 +28,6 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(location);
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -51,11 +50,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
           bottomRight: Radius.circular(sizeConfig.width * 70),
         ),
         boxShadow: [
-          BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 5,
-              blurRadius: 15
-          )
+          AppConst.shadow
         ],
         color: Colors.white,
       ),
@@ -79,7 +74,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  meh == 'p' ? StringResources.chooseLocationHeader1 : StringResources.chooseLocationHeader1,
+                  meh == 'p' ? StringResources.chooseLocationHeader1 : StringResources.chooseLocationHeader2,
                   style: TextStyle(
                     fontSize: sizeConfig.getPixels(32),
                     color: AppConst.textBlue,

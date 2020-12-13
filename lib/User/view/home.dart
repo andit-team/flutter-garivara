@@ -8,20 +8,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class HomeBody extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final GetSizeConfig getSizeConfig = Get.find();
-  double width;
-  double height;
-
 
   final String assetName = 'assets/images/svg/Menu.svg';
 
-  setInitialScreenSize() {
-    width = getSizeConfig.width.value;
-    height = getSizeConfig.height.value;
-  }
-
   @override
   Widget build(BuildContext context) {
-    setInitialScreenSize();
+    final double width = getSizeConfig.width.value;
+    final double height = getSizeConfig.height.value;
     Widget svgIcon = SvgPicture.asset(assetName, color: Color(0xffC8102E),width: width*60);
     return WillPopScope(
       onWillPop: () async => false,

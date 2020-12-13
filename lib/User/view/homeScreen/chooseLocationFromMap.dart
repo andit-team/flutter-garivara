@@ -74,7 +74,7 @@ class _ChooseLocationFromMapState extends State<ChooseLocationFromMap> {
             markers: gMarker,
             onMapCreated: _onMapCreated,
             onTap: setNewLocation,
-            zoomControlsEnabled: false,
+            zoomControlsEnabled: true,
           ),
           selectAddress(),
           Positioned(

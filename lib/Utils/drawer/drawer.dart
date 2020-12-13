@@ -1,11 +1,14 @@
-import 'package:andgarivara/General/view/signInScreen.dart';
-import 'package:andgarivara/User/view/RideResults/rideResults.dart';
+import 'package:andgarivara/User/view/drawerScreens/myRidesScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/newsAndOffersScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/profileScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/referAFriendScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/supportScreen.dart';
+import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
-import 'package:andgarivara/dummyPage.dart';
+import 'package:andgarivara/Utils/drawer/widget/logoutDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class MyDrawer extends StatelessWidget {
   final double height;
@@ -20,9 +23,8 @@ class MyDrawer extends StatelessWidget {
   });
 
 
-  GetSizeConfig getSizeConfig = Get.find();
+  final GetSizeConfig getSizeConfig = Get.find();
 
-  GetStorage localStorage = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -33,68 +35,77 @@ class MyDrawer extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Card(
-                    elevation: 4,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: width * 10),
-                      height: height * 150,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: width * 110,
-                            backgroundColor: Color(0xff2699FB),
-                            child: CircleAvatar(
-                              radius: width * 100,
-                              backgroundImage: NetworkImage('https://4.bp.blogspot.com/-5BCTUS-qq9Y/T64C44H7nHI/AAAAAAAACuk/kjNsZ0B8fIc/s1600/car+image+gallery-6.jpg'),
-                            ),
+                  DrawerHeader(
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: width * 110,
+                          backgroundColor: Color(0xff2699FB),
+                          child: CircleAvatar(
+                            radius: width * 100,
+                            backgroundImage: NetworkImage('https://4.bp.blogspot.com/-5BCTUS-qq9Y/T64C44H7nHI/AAAAAAAACuk/kjNsZ0B8fIc/s1600/car+image+gallery-6.jpg'),
                           ),
-                          SizedBox(width: width * 40,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Welcome To',
+                        ),
+                        SizedBox(width: width * 40,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                                'Margaritta Scarlet',
                                 overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: getSizeConfig.getPixels(20),
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  )
-                              ),
-                              Container(
-                                width:  width * 350,
-                                child: Text(
-                                 'Andgarivara',
-                                    style: TextStyle(
-                                      fontSize: getSizeConfig.getPixels(20),
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    )
-                                ),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              GestureDetector(
-                                onTap: () => scaffoldKey.currentState.openEndDrawer(),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: height * 10
-                                  ),
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Color(0xff7C7D80),
+                                style: TextStyle(
+                                  fontSize: getSizeConfig.getPixels(20),
+                                  color: AppConst.textBlue,
+                                )
+                            ),
+                            SizedBox(height: height * 15,),
+                            Text(
+                                '+880 1711 123 456',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: getSizeConfig.getPixels(18),
+                                  color: AppConst.textLight,
+                                )
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onTap: ()=> Get.to(ProfileScreen()),
+                                  child: Text(
+                                      'View profile',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: getSizeConfig.getPixels(14),
+                                        color: AppConst.appBlue,
+                                        decoration: TextDecoration.underline
+                                      )
                                   ),
                                 ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            GestureDetector(
+                              onTap: () => scaffoldKey.currentState.openEndDrawer(),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: height * 10
+                                ),
+                                child: Icon(
+                                  Icons.close,
+                                  color: Color(0xff7C7D80),
+                                ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                   for(var item in drawerItems)
@@ -102,84 +113,17 @@ class MyDrawer extends StatelessWidget {
                   ListTile(
                     onTap: () {
                       scaffoldKey.currentState.openEndDrawer();
-                      showCupertinoDialog(
-                          barrierDismissible: true,
-                          context: context,
-                          builder: (context) => Dialog(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: width*20,vertical: height*20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Are you sure you want to\nLogout?',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: getSizeConfig.getPixels(20),
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    )
-                                  ),
-                                  SizedBox(height: height * 40,),
-                                  FlatButton(
-                                    onPressed: (){
-                                      localStorage.erase();
-                                      Get.to(SignInScreen());
-                                    },
-                                    color: Color(0xffC8102E),
-                                    child: Container(
-                                      height: height * 65,
-                                      width: double.infinity,
-                                      child: Center(
-                                        child: Text(
-                                          'Logout',
-                                            style: TextStyle(
-                                              fontSize: getSizeConfig.getPixels(20),
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: height * 20,),
-                                  FlatButton(
-                                    onPressed: (){
-                                      Get.back();
-                                    },
-                                    color: Colors.black,
-                                    child: Container(
-                                      height: height * 65,
-                                      width: double.infinity,
-                                      child: Center(
-                                        child: Text(
-                                          'Cancel',
-                                            style: TextStyle(
-                                              fontSize: getSizeConfig.getPixels(20),
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                      );
+                      Get.dialog(LogoutDialog());
                     },
                     leading: Icon(
                       Icons.power_settings_new,
-                      color: Color(0xff2699FB),
-                      size: height * 35,
+                      color: AppConst.appBlue,
                     ),
                     title: Text(
                       'Logout',
                         style: TextStyle(
-                          fontSize: getSizeConfig.getPixels(20),
+                          fontSize: getSizeConfig.getPixels(16),
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
                         )
                     ),
                   ),
@@ -192,30 +136,28 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  drawerItem(navigation, icon, title) => Column(
-    children: [
-      ListTile(
-        onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => navigation)),
-        leading: Icon(
-          icon,
-          color: Color(0xff2699FB),
-        ),
-        title: Text(
-          title,
-            style: TextStyle(
-              fontSize: getSizeConfig.getPixels(20),
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            )
-        ),
-        trailing: Icon(
-            Icons.navigate_next
-        ),
-      ),
-      //title=='App feedback'?SizedBox(height: height * 50):Container(),
-      title=='App feedback'?Divider(color: Colors.black,):title=='Version 1.0.0'?Divider(color: Colors.black):Container(),
-
-    ],
+  drawerItem(navigation, icon, title) => ListTile(
+    onTap: (){
+      if(navigation != null){
+        Get.to(navigation);
+      }else{
+        Get.snackbar('Unfortunate', 'Screen not ready');
+      }
+    },
+    leading: Icon(
+      icon,
+      color: AppConst.appBlue,
+    ),
+    title: Text(
+      title,
+        style: TextStyle(
+          fontSize: getSizeConfig.getPixels(16),
+          color: Colors.black,
+        )
+    ),
+    trailing: Icon(
+        Icons.navigate_next
+    ),
   );
 
 }
@@ -230,13 +172,39 @@ class DrawerItems{
 
 final List<DrawerItems> drawerItems = [
   DrawerItems(
-      navigation: RideResults(),
-      icon: Icons.search_sharp,
-      title: 'Ride Search'
+    title: 'Notifications',
+    icon: Icons.notifications
   ),
   DrawerItems(
-      navigation: DummyPage(),
-      icon: Icons.info_outline,
-      title: 'Version 1.0.0'
+    title: 'Settings',
+    icon: Icons.settings
+  ),
+  DrawerItems(
+    title: 'Refer a friend',
+    icon: Icons.person,
+    navigation: ReferAFriendScreen()
+  ),
+  DrawerItems(
+    title: 'Payment',
+    icon: Icons.account_balance_wallet
+  ),
+  DrawerItems(
+    title: 'AndGarivara Support',
+    icon: Icons.contact_support,
+    navigation: SupportScreen()
+  ),
+  DrawerItems(
+    title: 'My Rides',
+    icon: Icons.car_repair,
+    navigation: MyRidesScreen()
+  ),
+  DrawerItems(
+    title: 'My favourite place',
+    icon: Icons.favorite
+  ),
+  DrawerItems(
+    title: 'News and offers',
+    icon: Icons.new_releases,
+    navigation: NewsAndOffersScreen()
   ),
 ];

@@ -1,7 +1,10 @@
 import 'package:andgarivara/General/view/IntroScreen.dart';
 import 'package:andgarivara/General/view/signInScreen.dart';
+import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
+import 'package:andgarivara/Utils/widgets/wideRedButton.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -21,40 +24,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   bool firstLogin = true;
 
-  double circle1 = 1;
-  double circle2 = 1;
-  double circle3 = 1;
-  double circle4 = 1;
-
-  Duration duration1 = Duration(milliseconds: 1200);
-  Duration duration2 = Duration(milliseconds: 1000);
-  Duration duration3 = Duration(milliseconds: 800);
-  Duration duration4 = Duration(milliseconds: 500);
-
-  double opacity = 0;
-
-  double position = -1000;
-
-  Color colorCircles = Color(0xffffffff);
-  Color colorBackground = Color(0xffEBEBEB);
-  Color colorButton = Color(0xff455A64);
-
-  increaseRadius() {
-    Future.delayed(Duration(milliseconds: 10), () {
-      setState(() {
-        circle1 = height * 370;
-        circle2 = height * 650;
-        circle3 = height * 1205;
-        circle4 = height * 1418;
-      });
-    });
-    Future.delayed(Duration(milliseconds: 1400), () {
-      setState(() {
-        position = width * 180;
-        opacity = 1;
-      });
-    });
-  }
+  final List<String> language = [
+    'English',
+    'Bangla'
+  ];
+  String selectedLanguage = 'English';
 
   setInitialScreenSize(){
 
@@ -99,145 +73,121 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     setInitialScreenSize();
-    increaseRadius();
     return Scaffold(
-      //backgroundColor: Color(0xffC8102E),
-      backgroundColor: colorBackground,
       body: Stack(
         children: [
-          backGroundCircle1(),
-          backGroundCircle2(),
-          backGroundCircle3(),
-          backGroundCircle4(),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: width * 1000,
-              ),
-              AnimatedOpacity(
-                duration: Duration(milliseconds: 1200),
-                opacity: opacity,
-                child: Container(
-                  height: height * 260,
-                  width: width * 800,
-                  child: Image.asset(
-                    'assets/images/appLogo/andgarivara_hero.gif',
-                    // fit: BoxFit.cover,
+          Image.asset(
+            'assets/images/splashBG.png',
+            height: Get.height,
+            width: Get.width,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            color: AppConst.appRed,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 100,vertical: height * 150),
+            child: Column(
+              children: [
+                Center(
+                  child: Card(
+                    elevation: 5,
+                    color: AppConst.appRed,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 30)),
+                    child: Container(
+                      height: height * 200,
+                      width: height * 200,
+                      child: Container(
+                        margin: EdgeInsets.all(height * 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(width * 30),
+                          image: DecorationImage(
+                            image: AssetImage(
+                              'assets/images/appLogo/app_logo_white.png'
+                            )
+                          )
+                        )
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () => Get.offAll(
-                    firstLogin ? IntroScreenState() : SignInScreen()),
-                child: AnimatedOpacity(
-                  duration: Duration(milliseconds: 1200),
-                  opacity: opacity,
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: width * 630,
-                        height: height * 65,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(11111),
-                            border: Border.all(color: colorButton)),
-                        child: Center(
-                          child: Text(
-                            'Welcome',
-                            style: TextStyle(
-                                fontSize: getSizeConfig.getPixels(20),
-                                color: colorButton,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                SizedBox(height: height * 50,),
+                AspectRatio(
+                  aspectRatio: 289/72,
+                  child: Image.asset(
+                    'assets/images/appLogo/white.png'
+                  ),
+                ),
+                SizedBox(height: height * 20,),
+                Text(
+                  'Safety and security is our concern',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    letterSpacing: 0.5
+                  ),
+                ),
+                Spacer(),
+                WideRedButton(
+                  label: 'Go!',
+                  color: Colors.white,
+                  onPressed: (){
+                    Get.offAll(firstLogin ? IntroScreenState() : SignInScreen());
+                  },
+                ),
+                SizedBox(height: height * 15,),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Language : ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16
                       ),
-                      Positioned(
-                        right: 1,
-                        child: Container(
-                          height: height * 65,
-                          width: height * 65,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: colorButton,
-                              )),
-                          child: Center(
-                            child: Icon(
-                              Icons.arrow_forward,
-                              color: colorButton,
-                              size: height * 40,
+                    ),
+                    PopupMenuButton(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            selectedLanguage,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
                             ),
                           ),
-                        ),
+                          SizedBox(width: width * 10,),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 16,
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-          // logo(),
-          // btn(),
+                      onSelected: (value){
+                        setState(() {selectedLanguage=value;});
+                      },
+                      itemBuilder: (_)=> language.map((e) => PopupMenuItem(
+                        value: e,
+                        child: Text(
+                          e,
+                          style: TextStyle(
+                            color: AppConst.textLight,
+                            fontSize: 16
+                          ),
+                        ),
+                      )).toList(),
+                    )
+                  ],
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
   }
-
-  backGroundCircle1() => Positioned(
-        top: height * 20,
-        left: -width * 270,
-        child: AnimatedContainer(
-          duration: duration1,
-          height: circle1,
-          width: circle1,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-              border: Border.all(color: colorCircles, width: width * 100)),
-        ),
-      );
-
-  backGroundCircle2() => Positioned(
-        top: -height * 160,
-        left: -width * 500,
-        child: AnimatedContainer(
-          duration: duration2,
-          height: circle2,
-          width: circle2,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-              border: Border.all(color: colorCircles, width: width * 10)),
-        ),
-      );
-
-  backGroundCircle3() => Positioned(
-        top: -height * 608,
-        left: -width * 1000,
-        child: AnimatedContainer(
-          duration: duration3,
-          height: circle3,
-          width: circle3,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-              border: Border.all(color: colorCircles, width: width * 10)),
-        ),
-      );
-
-  backGroundCircle4() => Positioned(
-        top: -height * 690,
-        left: -width * 1070,
-        child: AnimatedContainer(
-          duration: duration4,
-          height: circle4,
-          width: circle4,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-              border: Border.all(color: colorCircles, width: width * 10)),
-        ),
-      );
 }

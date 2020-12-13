@@ -2,7 +2,6 @@ import 'package:andgarivara/General/view/signInScreen.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override

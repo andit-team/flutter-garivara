@@ -1,4 +1,3 @@
-import 'package:andgarivara/User/model/VehicleResultModel.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/amenitiesWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/carDetails.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/description.dart';
@@ -8,10 +7,13 @@ import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
+import 'package:andgarivara/demo/VehicleResultModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'getQuoteScreen.dart';
 
 class SingleRideResult extends StatefulWidget {
   @override
@@ -38,10 +40,7 @@ class _SingleRideResultState extends State<SingleRideResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DrawerlessAppBar(
-        height: height,
-        width: width,
-      ),
+      appBar: DrawerLessAppBar(),
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
         child: Column(
@@ -81,22 +80,28 @@ class _SingleRideResultState extends State<SingleRideResult> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: height*50,
-                        width: width * 250,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width*30),
-                            border: Border.all(
-                                color: AppConst.appBlue,
-                                width: 2
-                            )
-                        ),
-                        child: Center(
-                          child: Text(
-                            StringResources.singeRideResultGetQuote,
-                            style: TextStyle(
-                                color: AppConst.appBlue,
-                                fontSize: sizeConfig.getPixels(16)
+                      InkWell(
+                        onTap: (){
+                          Get.to(GetQuoteScreen());
+                        },
+                        borderRadius: BorderRadius.circular(width*30),
+                        child: Container(
+                          height: height*50,
+                          width: width * 250,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width*30),
+                              border: Border.all(
+                                  color: AppConst.appBlue,
+                                  width: 2
+                              )
+                          ),
+                          child: Center(
+                            child: Text(
+                              StringResources.singeRideResultGetQuote,
+                              style: TextStyle(
+                                  color: AppConst.appBlue,
+                                  fontSize: sizeConfig.getPixels(16)
+                              ),
                             ),
                           ),
                         ),

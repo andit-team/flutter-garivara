@@ -1,4 +1,3 @@
-import 'package:andgarivara/General/view/passwordResetScreen.dart';
 import 'package:andgarivara/General/view/verifyOTP.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:flutter/material.dart';
@@ -7,25 +6,19 @@ import 'package:get/get.dart';
 class ForgotPassword extends StatelessWidget {
 
   final GetSizeConfig getSizeConfig = Get.find();
-  double width;
-  double height;
 
-  TextEditingController mobile = TextEditingController(text: '01674620011');
-  FocusNode mobileNode = FocusNode();
+  final TextEditingController mobile = TextEditingController(text: '01674620011');
+  final FocusNode mobileNode = FocusNode();
 
   void dispose() {
     mobile.dispose();
     mobileNode.dispose();
   }
 
-  setInitialScreenSize() {
-    width = getSizeConfig.width.value;
-    height = getSizeConfig.height.value;
-  }
-
   @override
   Widget build(BuildContext context) {
-    setInitialScreenSize();
+    final double width = getSizeConfig.width.value;
+    final double height = getSizeConfig.height.value;
     return Scaffold(
       backgroundColor: Color(0xffffffff),
         body: Center(

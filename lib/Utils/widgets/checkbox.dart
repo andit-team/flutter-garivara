@@ -4,11 +4,13 @@ class NoPaddingCheckbox extends StatelessWidget {
   final bool isMarked;
   final Function(bool newValue) onChange;
   final double size;
+  final Color color;
 
   NoPaddingCheckbox({
     @required this.isMarked,
     @required this.onChange,
     this.size = 24,
+    this.color = Colors.black
   });
 
   @override
@@ -17,7 +19,7 @@ class NoPaddingCheckbox extends StatelessWidget {
       constraints: BoxConstraints(maxHeight: size, maxWidth: size),
       child: RawMaterialButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        child: Icon(_getIconData(), size: size),
+        child: Icon(_getIconData(), size: size,color: color,),
         onPressed: () => onChange(!isMarked),
       ),
     );
