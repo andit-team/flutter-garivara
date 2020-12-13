@@ -69,6 +69,7 @@ flutter:
     - assets/images/intro/
     - assets/images/appLogo/
     - assets/images/paymentMethods/
+    - assets/images/signUpMethods/
     - assets/demo/
     - assets/icons/
 

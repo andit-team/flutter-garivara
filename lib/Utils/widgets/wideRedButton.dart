@@ -7,10 +7,12 @@ import '../appConst.dart';
 class WideRedButton extends StatelessWidget {
   final GetSizeConfig sizeConfig = Get.find();
   final String label;
+  final Color color;
   final Function onPressed;
   WideRedButton({
     @required this.label,
-    @required this.onPressed
+    @required this.onPressed,
+    this.color
 });
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class WideRedButton extends StatelessWidget {
       onPressed: onPressed,
       height: sizeConfig.getPixels(45),
       minWidth: double.infinity,
-      color: AppConst.appRed,
+      color: color ?? AppConst.appRed,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(sizeConfig.width* 15)
       ),
@@ -28,7 +30,7 @@ class WideRedButton extends StatelessWidget {
           style: TextStyle(
               fontSize: sizeConfig.getPixels(20),
               fontFamily: 'Robot-M',
-              color: Colors.white
+              color: color == null ? Colors.white : AppConst.appRed
           ),
         ),
       ),

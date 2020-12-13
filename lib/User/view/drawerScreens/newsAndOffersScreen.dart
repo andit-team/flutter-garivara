@@ -1,6 +1,8 @@
+import 'package:andgarivara/User/view/drawerScreens/widgets/newsAndOffersWidgets/newsTile.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
+import 'package:andgarivara/demo/demoData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -9,21 +11,8 @@ import 'widgets/newsAndOffersWidgets/promoTileWidget.dart';
 
 class NewsAndOffersScreen extends StatelessWidget {
   final GetSizeConfig sizeConfig = Get.find();
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    final stagList = [
-      StaggeredTile.count(2,1),
-      StaggeredTile.count(1,1),
-      StaggeredTile.count(1,.5),
-      StaggeredTile.count(1,.5),
-      StaggeredTile.count(2,1),
-      StaggeredTile.count(1,1),
-      StaggeredTile.count(1,1),
-    ];
     return Scaffold(
       appBar: DrawerLessAppBar(),
       body: DefaultTabController(
@@ -67,18 +56,13 @@ class NewsAndOffersScreen extends StatelessWidget {
                       padding: EdgeInsets.only(top: sizeConfig.height * 15),
                       crossAxisSpacing: sizeConfig.width * 15,
                       mainAxisSpacing: sizeConfig.height * 10,
-                      itemCount: 7,
+                      itemCount: DemoNews.demoNews.length > 10 ? 10 : DemoNews.demoNews.length,
                       staggeredTileBuilder: (index){
-                        return stagList[index];
+                        return AppConst.stagListTile[index];
                       },
                       itemBuilder: (_,index){
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(sizeConfig.width * 25),
-                            color: Colors.red
-                          ),
-                          child: Text((index+1).toString()),
-                        );
+                        DemoNews news = DemoNews.demoNews[index];
+                        return NewsTileWidget(news: news);
                       },
                     ),
                     ListView.builder(
@@ -92,9 +76,10 @@ class NewsAndOffersScreen extends StatelessWidget {
                     ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
-                      itemCount: 10,
+                      itemCount: DemoPromotion.demoPromotions.length,
                       itemBuilder: (_,index){
-                        return PromoTileWidget();
+                        DemoPromotion promo = DemoPromotion.demoPromotions[index];
+                        return PromoTileWidget(promo: promo);
                       },
                     ),
                   ],

@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AppConst{
@@ -30,4 +31,17 @@ class AppConst{
     'assets/images/svg/coupon.svg',
     color: appBlue
   );
+
+  static final stagListTile = [
+    StaggeredTile.count(2,1),
+    StaggeredTile.count(1,1),
+    StaggeredTile.count(1,.5),
+    StaggeredTile.count(1,.5),
+    StaggeredTile.count(2,1),
+    StaggeredTile.count(1,1),
+    StaggeredTile.count(1,1),
+    StaggeredTile.count(1,.5),
+    StaggeredTile.count(1,1),
+    StaggeredTile.count(1,.5),
+  ];
 }

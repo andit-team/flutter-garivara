@@ -57,6 +57,11 @@ class StringResources{
   static final String profileScreenLanguage = 'Language';
 
 
+  static final String supportTitle = 'Help and Support';
+  static final String supportHeader1 = 'About';
+  static final String supportHeader2 = 'Dear passenger';
+  static final String supportHeader3 = 'And Garivara';
+  static final String supportHeader4 = 'Terms and conditions';
 
 
 
@@ -72,6 +77,7 @@ class StringResources{
   static final String driverImage = 'https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_956,h_637/v1597356373/assets/3b/978a73-4909-45ab-85ef-8f74f1beaf8e/original/desk2x-%281%29.jpg';
   static final String reviewerImage = 'https://thehauterfly.com/wp-content/uploads/2017/06/shutterstock_532554733.jpg';
   static final String review = 'I did a scheduled ride a couple of days ago for the next morning. It was move/relocation related. At the designed time of 7AM the app confirmed my scheduled request and that a drive was near. As I waited it appeared someone should be nearby.';
+  static final String loremIpsum = '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id nulla non felis pulvinar fringilla. Ut mauris enim, eleifend sed ultrices eget, lacinia id orci. Duis ex magna, consectetur a pulvinar ut, feugiat eget nulla. Praesent venenatis nulla non augue laoreet condimentum.''';
 
 
 

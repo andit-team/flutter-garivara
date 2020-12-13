@@ -1,6 +1,7 @@
 import 'package:andgarivara/User/view/drawerScreens/myRidesScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/newsAndOffersScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/profileScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/supportScreen.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/drawer/widget/logoutDialog.dart';
@@ -187,7 +188,8 @@ final List<DrawerItems> drawerItems = [
   ),
   DrawerItems(
     title: 'AndGarivara Support',
-    icon: Icons.contact_support
+    icon: Icons.contact_support,
+    navigation: SupportScreen()
   ),
   DrawerItems(
     title: 'My Rides',
