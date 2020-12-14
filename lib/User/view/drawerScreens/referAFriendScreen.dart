@@ -12,21 +12,22 @@ class ReferAFriendScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Refer a Friend'
+          'Refer a Friend',
+          style: TextStyle(
+            color: AppConst.textBlue
+          ),
         ),
       ),
-      backgroundColor: AppConst.appRed,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
+        padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20),vertical: sizeConfig.height * 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: sizeConfig.height * 100,),
             Container(
               width: double.infinity,
               height: sizeConfig.height  *200,
               child: Image.asset(
-                  'assets/gifs/giftBox.gif'
+                'assets/images/create-referral-program.jpg'
               ),
             ),
             Container(
@@ -50,7 +51,7 @@ class ReferAFriendScreen extends StatelessWidget {
             Text(
               'Refer your friend and get a 100 TK voucher.',
               style: TextStyle(
-                color: Colors.white,
+                color: AppConst.textBlue,
                 fontSize: sizeConfig.getPixels(22),
                 fontWeight: FontWeight.bold
               ),
@@ -59,37 +60,42 @@ class ReferAFriendScreen extends StatelessWidget {
             Text(
               'When someone completes their first ride through your shared invitation link you will receive a 100TK voucher. You can use the voucher in any rides of your choice.',
               style: TextStyle(
-                color: Colors.white,
+                color: AppConst.textLight,
                 fontSize: sizeConfig.getPixels(16),
               ),
             ),
             SizedBox(height: sizeConfig.height * 20,),
-            RaisedButton(
-              onPressed: (){
-                Share.share('check out my website https://example.com', subject: 'Look what I made!');
-              },
-              color: AppConst.appBlue,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(111)),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 15,vertical: sizeConfig.height * 15),
-                child: Text(
-                  'Share your link',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: sizeConfig.getPixels(20)
+            Stack(
+              children: [
+                Image.asset('assets/images/Friends-Clipart-PNG-715x715.png',fit: BoxFit.cover,),
+                RaisedButton(
+                  onPressed: (){
+                    Share.share('check out my website https://example.com', subject: 'Look what I made!');
+                  },
+                  color: AppConst.appBlue,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(111)),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 15,vertical: sizeConfig.height * 15),
+                    child: Text(
+                      'Share your link',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: sizeConfig.getPixels(20)
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
             Spacer(),
             Text(
               'Read Terms and Conditions',
               style: TextStyle(
-                color: Colors.white60,
-                fontSize: sizeConfig.getPixels(16),
+                  color: AppConst.textLight,
+                  fontSize: sizeConfig.getPixels(16),
+                  decoration: TextDecoration.underline
               ),
             ),
-            SizedBox(height: sizeConfig.height * 50,)
           ],
         ),
       ),

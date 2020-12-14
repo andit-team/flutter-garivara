@@ -1,5 +1,7 @@
+import 'package:andgarivara/User/view/drawerScreens/favouritePlacesScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/myRidesScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/newsAndOffersScreen.dart';
+import 'package:andgarivara/User/view/drawerScreens/notificationsScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/profileScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/referAFriendScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/supportScreen.dart';
@@ -173,7 +175,8 @@ class DrawerItems{
 final List<DrawerItems> drawerItems = [
   DrawerItems(
     title: 'Notifications',
-    icon: Icons.notifications
+    icon: Icons.notifications,
+    navigation: NotificationsScreen()
   ),
   DrawerItems(
     title: 'Settings',
@@ -200,7 +203,8 @@ final List<DrawerItems> drawerItems = [
   ),
   DrawerItems(
     title: 'My favourite place',
-    icon: Icons.favorite
+    icon: Icons.favorite,
+    navigation: MyFavouritePlacesScreen()
   ),
   DrawerItems(
     title: 'News and offers',
