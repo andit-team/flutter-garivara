@@ -5,9 +5,11 @@ import 'package:andgarivara/User/view/drawerScreens/notificationsScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/profileScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/referAFriendScreen.dart';
 import 'package:andgarivara/User/view/drawerScreens/supportScreen.dart';
+import 'package:andgarivara/User/viewModel/userData.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/drawer/widget/logoutDialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,59 +39,70 @@ class MyDrawer extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  DrawerHeader(
+                  Obx(()=>DrawerHeader(
+                    padding: EdgeInsets.only(right: 16),
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          radius: width * 110,
-                          backgroundColor: Color(0xff2699FB),
+                        SizedBox(width: 20,),
+                        Expanded(
+                          flex: 3,
                           child: CircleAvatar(
-                            radius: width * 100,
-                            backgroundImage: NetworkImage('https://4.bp.blogspot.com/-5BCTUS-qq9Y/T64C44H7nHI/AAAAAAAACuk/kjNsZ0B8fIc/s1600/car+image+gallery-6.jpg'),
+                            radius: width * 110,
+                            backgroundColor: Color(0xff2699FB),
+                            child: CircleAvatar(
+                              radius: width * 100,
+                              backgroundImage: ViewModelUserData.userData.value.profilePic.isNullOrBlank ?
+                              AssetImage('assets/images/appLogo/app_logo.png') :
+                              CachedNetworkImageProvider(ViewModelUserData.userData.value.profilePic)
+                            ),
                           ),
                         ),
-                        SizedBox(width: width * 40,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                                'Margaritta Scarlet',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: getSizeConfig.getPixels(20),
-                                  color: AppConst.textBlue,
-                                )
-                            ),
-                            SizedBox(height: height * 15,),
-                            Text(
-                                '+880 1711 123 456',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: getSizeConfig.getPixels(18),
-                                  color: AppConst.textLight,
-                                )
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: ()=> Get.to(ProfileScreen()),
-                                  child: Text(
-                                      'View profile',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: getSizeConfig.getPixels(14),
-                                        color: AppConst.appBlue,
-                                        decoration: TextDecoration.underline
-                                      )
-                                  ),
+                        SizedBox(width: width * 15,),
+                        Expanded(
+                          flex: 7,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                    ViewModelUserData.userData.value.firstName[0].capitalize + '. ' + ViewModelUserData.userData.value.lastName.capitalize,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: getSizeConfig.getPixels(20),
+                                      color: AppConst.textBlue,
+                                    )
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              SizedBox(height: height * 15,),
+                              Text(
+                                  '+88' + ViewModelUserData.userData.value.phoneNo,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: getSizeConfig.getPixels(18),
+                                    color: AppConst.textLight,
+                                  )
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: ()=> Get.to(ProfileScreen()),
+                                    child: Text(
+                                        'View profile',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: getSizeConfig.getPixels(14),
+                                            color: AppConst.appBlue,
+                                            decoration: TextDecoration.underline
+                                        )
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Spacer(),
                         Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -109,7 +122,7 @@ class MyDrawer extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
+                  )),
                   for(var item in drawerItems)
                     drawerItem(item.navigation, item.icon, item.title),
                   ListTile(

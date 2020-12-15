@@ -23,31 +23,37 @@ class ReferAFriendScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              height: sizeConfig.height  *200,
-              child: Image.asset(
-                'assets/images/create-referral-program.jpg'
-              ),
-            ),
-            Container(
-              width: sizeConfig.width * 200,
-              height: sizeConfig.height * 25,
-              decoration: BoxDecoration(
-                  color: AppConst.appBlue,
-                  borderRadius: BorderRadius.circular(sizeConfig.width * 20)
-              ),
-              child: Center(
-                child: Text(
-                  'BDT 100',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: sizeConfig.height  *200,
+                  child: Image.asset(
+                    'assets/images/create-referral-program.jpg'
                   ),
                 ),
-              ),
+                Positioned(
+                  child: Container(
+                    width: sizeConfig.width * 200,
+                    height: sizeConfig.height * 25,
+                    decoration: BoxDecoration(
+                        color: AppConst.appBlue,
+                        borderRadius: BorderRadius.circular(sizeConfig.width * 20)
+                    ),
+                    child: Center(
+                      child: Text(
+                        'BDT 100',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: sizeConfig.height * 40,),
+            SizedBox(height: sizeConfig.height * 20,),
             Text(
               'Refer your friend and get a 100 TK voucher.',
               style: TextStyle(
