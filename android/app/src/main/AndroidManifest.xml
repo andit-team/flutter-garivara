@@ -18,7 +18,7 @@
         android:label="andgarivara"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDtygZ5JPTLgwFLA8nU6bb4d_6SSLlTPGw"/>
+            android:value="AIzaSyACEuDJhK153vcBxpYi6dZjMHe7Al0o6Cw"/>
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
