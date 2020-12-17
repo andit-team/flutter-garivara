@@ -124,7 +124,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       sigmaY: 5,
                       sigmaX: 5
                     ),
-                    child: Container(color: Colors.black.withOpacity(0),),
+                    child: Container(color: Colors.black.withOpacity(0),
+                    ),
                   ),
                 ) : SizedBox()
               ],
@@ -275,6 +276,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       ],
     ),
   );
+
   int selectedVehicle = 0;
   Widget selectVehicleType(){
     return Container(
