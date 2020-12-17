@@ -1,9 +1,14 @@
+import 'package:andgarivara/General/repository/repoLogin.dart';
 import 'package:andgarivara/General/view/forgotPasswordScreen.dart';
 import 'package:andgarivara/General/view/signupScreen.dart';
 import 'package:andgarivara/User/view/home.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/widgets/checkbox.dart';
+import 'package:andgarivara/Utils/widgets/redButton.dart';
+import 'package:andgarivara/Utils/widgets/screenLoader.dart';
+import 'package:andgarivara/Utils/widgets/snackBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
@@ -19,8 +24,8 @@ class _SignInScreenState extends State<SignInScreen> {
   double height;
 
   bool rememberMe = true;
-  TextEditingController mobile = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController mobile = TextEditingController(text: '11111111111');
+  TextEditingController password = TextEditingController(text: '123123');
 
   FocusNode mobileNode = FocusNode();
   FocusNode passwordNode = FocusNode();
@@ -48,55 +53,60 @@ class _SignInScreenState extends State<SignInScreen> {
     height = getSizeConfig.height.value;
   }
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xffffffff),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: width*70),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  logo(),
-                  upperTitle(),
-                  form(),
-                  Padding(
-                    padding: EdgeInsets.symmetric( vertical: height * 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: width * 250,
-                              height: height * 5,
-                              color: Color(0xff707070),
-                            ),
-                            Text(
-                              'Or connect with',
-                              style: TextStyle(fontSize: getSizeConfig.getPixels(16),
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff34415F)
+    return IsScreenLoading(
+      isLoading: loading,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Color(0xffffffff),
+          body: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width*70),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    logo(),
+                    upperTitle(),
+                    form(),
+                    Padding(
+                      padding: EdgeInsets.symmetric( vertical: height * 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: width * 250,
+                                height: height * 5,
+                                color: Color(0xff707070),
                               ),
-                            ),
-                            Container(
-                              width: width * 250,
-                              height: height * 5,
-                              color: Color(0xff707070),
-                            ),
-                          ],
-                        ),
-                      ],
+                              Text(
+                                'Or connect with',
+                                style: TextStyle(fontSize: getSizeConfig.getPixels(16),
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff34415F)
+                                ),
+                              ),
+                              Container(
+                                width: width * 250,
+                                height: height * 5,
+                                color: Color(0xff707070),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  socialMedia(),
-                  haveAccount(),
-                ],
+                    socialMedia(),
+                    haveAccount(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -177,9 +187,16 @@ class _SignInScreenState extends State<SignInScreen> {
       EdgeInsets.symmetric(vertical: height * 10),
       child: TextField(
         controller: mobile,
+        keyboardType: TextInputType.number,
         focusNode: mobileNode,
+        inputFormatters: [LengthLimitingTextInputFormatter(11)],
         //autofocus: true,
         decoration: InputDecoration(
+          prefixText: '+88',
+          prefixStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 16
+          ),
           contentPadding: EdgeInsets.symmetric(
               vertical: height * 5,
               horizontal: width * 30),
@@ -257,27 +274,32 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Padding signInButton() {
     return Padding(
-                            padding:
-                            EdgeInsets.symmetric(vertical: height * 10),
-                            child: Container(
-                              width: width*1000,
-                              height: height*70,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(width*80),
-                                    side: BorderSide(color: Colors.red)
-                                ),
-                                onPressed: () {
-                                  Get.to(HomeBody());},
-                                child: Text(
-                                  'Login',
-                                  style: TextStyle(color: Colors.white,fontSize: getSizeConfig.getPixels(20)),
-                                ),
-                                color: Color(0xffC8102E),
-                                splashColor: Colors.grey,
-                              ),
-                            ),
-                          );
+      padding:
+      EdgeInsets.symmetric(vertical: height * 10),
+      child: RedButton(
+        title: 'Login',
+        function: () async{
+          if(mobile.text.isNotEmpty && password.text.isNotEmpty){
+
+            setState(() {
+              loading = true;
+            });
+
+            bool error = await RepoLogin.login(mobile.text, password.text);
+            if(error){
+              Snack.bottom('Error', 'Login failed');
+            }else{
+              Get.offAll(HomeBody());
+            }
+            setState(() {
+              loading = false;
+            });
+          }else{
+            Snack.top('Hey!!', 'Please fill up all the fields');
+          }
+        },
+      ),
+    );
   }
 
   Padding socialMedia() {

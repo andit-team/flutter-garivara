@@ -1,4 +1,5 @@
 import 'package:andgarivara/General/view/splashScreen.dart';
+import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,10 @@ class InitiateApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
           elevation: 0,
-          color: Colors.transparent
+          color: Colors.transparent,
+          iconTheme: IconThemeData(
+            color: Colors.black
+          )
         )
       ),
       home: SplashScreen(),
