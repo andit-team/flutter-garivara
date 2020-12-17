@@ -24,8 +24,8 @@ class _SignInScreenState extends State<SignInScreen> {
   double height;
 
   bool rememberMe = true;
-  TextEditingController mobile = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController mobile = TextEditingController(text: '11111111111');
+  TextEditingController password = TextEditingController(text: '123123');
 
   FocusNode mobileNode = FocusNode();
   FocusNode passwordNode = FocusNode();

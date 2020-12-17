@@ -16,6 +16,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'widgets/profileScreenWidgets/changePasswordDialog.dart';
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -61,219 +63,262 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool loading = false;
 
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return IsScreenLoading(
       isLoading: loading,
-      child: Scaffold(
-        appBar: DrawerLessAppBar(
-          // widget: Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: FloatingActionButton.extended(
-          //     onPressed: (){
-          //       setState(() {
-          //         edit = !edit;
-          //       });
-          //     },
-          //     icon: Icon(edit ? Icons.save : Icons.edit),
-          //     label: Text(edit ? 'Save' : 'Edit'),
-          //   ),
-          // ),
-        ),
-        body: Obx(()=>Padding(
-          padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
-          child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: CircleAvatar(
-                      radius: sizeConfig.getPixels(65),
-                      backgroundColor: AppConst.appGreen,
-                      child: CircleAvatar(
-                        radius: sizeConfig.getPixels(60),
-                        backgroundImage: user.profilePic.isNullOrBlank ?
-                        image == null ? AssetImage('assets/images/appLogo/app_logo.png') : FileImage(image) :
-                        CachedNetworkImageProvider(ViewModelUserData.userData.value.profilePic)
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: sizeConfig.width * 30,),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FlatButton.icon(
-                        onPressed: (){
-                          selectImage();
-                        },
-                        color: Colors.blue,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sizeConfig.width * 30)),
-                        icon: Icon(
-                          Icons.upload_file,
-                          color: Colors.white,
-                        ),
-                        label: Text('Select Image',style: TextStyle(color: Colors.white),),
-                      ),
-                      image != null ? FlatButton.icon(
-                        onPressed: () async{
-                          setState(() {
-                            loading = true;
-                          });
-                          bool error = await RepoUserProfile.uploadImage(image);
-                          Snack.bottom(error ? 'Error' : 'Success', error ? 'Failed to upload' : 'Image uploaded');
-                          setState(() {
-                            loading = false;
-                          });
-                        },
-                        color: Colors.blue,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sizeConfig.width * 30)),
-                        icon: Icon(
-                          Icons.upload_file,
-                          color: Colors.white,
-                        ),
-                        label: Text('Upload Image',style: TextStyle(color: Colors.white),),
-                      ) : SizedBox(),
-                    ],
-                  ),
-                ],
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: DrawerLessAppBar(
+            widget: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton.extended(
+                onPressed: () async{
+                  if(edit){
+                    setState(() {
+                      loading = true;
+                    });
+                    bool result = await RepoUserProfile.updateProfile(
+                      fNameEditingController.text,
+                      lNameEditingController.text,
+                      emailEditingController.text
+                    );
+                    setState(() {
+                      loading = false;
+                    });
+                    Snack.bottom(
+                      result ? 'Error' : 'Success',
+                      result ? 'Failed to update' : 'Profile updated!'
+                    );
+
+                  }
+                  setState(() {
+                    edit = !edit;
+                  });
+                },
+                icon: Icon(edit ? Icons.save : Icons.edit),
+                label: Text(edit ? 'Save' : 'Edit'),
               ),
-              SizedBox(height: sizeConfig.height * 15,),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: Colors.grey,
-                            width: .7
-                        )
-                    )
-                ),
-                padding: EdgeInsets.only(bottom: sizeConfig.height * 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ),
+          body: Obx(()=>Padding(
+            padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
+            child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    TitleText(
-                      title: StringResources.profileScreenContact,
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: CircleAvatar(
+                        radius: sizeConfig.getPixels(65),
+                        backgroundColor: AppConst.appGreen,
+                        child: CircleAvatar(
+                          radius: sizeConfig.getPixels(60),
+                          backgroundImage: image !=null ? FileImage(image) :
+                          user.profilePic.isNullOrBlank ? AssetImage('assets/images/appLogo/app_logo.png') :
+                          CachedNetworkImageProvider(ViewModelUserData.userData.value.profilePic)
+                        ),
+                      ),
                     ),
-                    Row(
+                    SizedBox(width: sizeConfig.width * 30,),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: TextBoxWithTitle(
-                            title: 'First Name',
-                            controller: fNameEditingController,
-                            enabled: edit,
+                        FlatButton.icon(
+                          onPressed: (){
+                            selectImage();
+                          },
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sizeConfig.width * 30)),
+                          icon: Icon(
+                            Icons.upload_file,
+                            color: Colors.white,
                           ),
+                          label: Text( image == null ? 'Select Image' : 'Select another',style: TextStyle(color: Colors.white),),
                         ),
-                        SizedBox(width: sizeConfig.width * 20,),
-                        Expanded(
-                          child: TextBoxWithTitle(
-                            title: 'Last Name',
-                            controller: lNameEditingController,
-                            enabled: edit,
+                        image != null ? FlatButton.icon(
+                          onPressed: () async{
+                            setState(() {
+                              loading = true;
+                            });
+                            bool error = await RepoUserProfile.uploadImage(image);
+                            Snack.bottom(error ? 'Error' : 'Success', error ? 'Failed to upload' : 'Image uploaded');
+                            setState(() {
+                              loading = false;
+                            });
+                          },
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sizeConfig.width * 30)),
+                          icon: Icon(
+                            Icons.upload_file,
+                            color: Colors.white,
                           ),
-                        ),
+                          label: Text('Upload Image',style: TextStyle(color: Colors.white),),
+                        ) : SizedBox(),
                       ],
                     ),
-                    TextBoxWithTitle(
-                      title: 'Email',
-                      controller: emailEditingController,
-                      enabled: edit,
-                    ),
-                    TextBoxWithTitle(
-                      title: 'Mobile',
-                      controller: mobileEditingController,
-                      enabled: edit,
-                    ),
                   ],
                 ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: Colors.grey,
-                            width: .7
-                        )
-                    )
-                ),
-                padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(width: double.infinity,),
-                    TitleText(
-                      title: StringResources.profileScreenSecurity,
-                    ),
-                    TitleWithTextButton(
-                      title: 'Password',
-                      subtitle: 'Change password',
-                      onTap: (){
-
-                      },
-                    ),
-                    // TitleWithTextButton(
-                    //   title: 'Security Question',
-                    //   subtitle: 'Change security question',
-                    //   onTap: (){
-                    //
-                    //   },
-                    // ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TitleText(
-                      title: StringResources.profileScreenLanguage,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Select language',
-                            style: TextStyle(
-                                fontSize: sizeConfig.getPixels(16),
-                                color: AppConst.textLight
-                            ),
-                          ),
-                          SizedBox(height: sizeConfig.height * 10,),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              onChanged: (value){
-                                setState(() {
-                                  selectedLanguage = value;
-                                });
-                              },
-                              isExpanded: true,
-                              value: selectedLanguage,
-                              items: languages.map((e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  e,
-                                  style: TextStyle(
-                                      fontSize: sizeConfig.getPixels(18),
-                                      color: AppConst.textBlue
-                                  ),
-                                ),
-                              )).toList(),
-                            ),
+                SizedBox(height: sizeConfig.height * 15,),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              color: Colors.grey,
+                              width: .7
                           )
-                        ],
+                      )
+                  ),
+                  padding: EdgeInsets.only(bottom: sizeConfig.height * 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TitleText(
+                        title: StringResources.profileScreenContact,
                       ),
-                    )
-                  ],
+                      AnimatedCrossFade(
+                        firstChild: Row(
+                          children: [
+                            Expanded(
+                              child: TextBoxWithTitle(
+                                title: 'First Name',
+                                controller: fNameEditingController,
+                                enabled: edit,
+                              ),
+                            ),
+                            SizedBox(width: sizeConfig.width * 20,),
+                            Expanded(
+                              child: TextBoxWithTitle(
+                                title: 'Last Name',
+                                controller: lNameEditingController,
+                                enabled: edit,
+                              ),
+                            ),
+                          ],
+                        ),
+                        secondChild: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextBoxWithTitle(
+                              title: 'First Name',
+                              controller: fNameEditingController,
+                              enabled: edit,
+                            ),
+                            SizedBox(width: sizeConfig.width * 20,),
+                            TextBoxWithTitle(
+                              title: 'Last Name',
+                              controller: lNameEditingController,
+                              enabled: edit,
+                            ),
+                          ],
+                        ),
+                        duration: AppConst.duration,
+                        crossFadeState: edit ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                      ),
+                      TextBoxWithTitle(
+                        title: 'Email',
+                        controller: emailEditingController,
+                        enabled: edit,
+                      ),
+                      TextBoxWithTitle(
+                        title: 'Mobile',
+                        controller: mobileEditingController,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        )),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              color: Colors.grey,
+                              width: .7
+                          )
+                      )
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: double.infinity,),
+                      TitleText(
+                        title: StringResources.profileScreenSecurity,
+                      ),
+                      TitleWithTextButton(
+                        title: 'Password',
+                        subtitle: 'Change password',
+                        onTap: () {
+                          Get.dialog(ChangePasswordDialog());
+                        },
+                      ),
+                      // TitleWithTextButton(
+                      //   title: 'Security Question',
+                      //   subtitle: 'Change security question',
+                      //   onTap: (){
+                      //
+                      //   },
+                      // ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TitleText(
+                        title: StringResources.profileScreenLanguage,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select language',
+                              style: TextStyle(
+                                  fontSize: sizeConfig.getPixels(16),
+                                  color: AppConst.textLight
+                              ),
+                            ),
+                            SizedBox(height: sizeConfig.height * 10,),
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                onChanged: (value){
+                                  setState(() {
+                                    selectedLanguage = value;
+                                  });
+                                },
+                                isExpanded: true,
+                                value: selectedLanguage,
+                                items: languages.map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(
+                                    e,
+                                    style: TextStyle(
+                                        fontSize: sizeConfig.getPixels(18),
+                                        color: AppConst.textBlue
+                                    ),
+                                  ),
+                                )).toList(),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }

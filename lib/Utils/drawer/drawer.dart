@@ -50,10 +50,10 @@ class MyDrawer extends StatelessWidget {
                             radius: width * 110,
                             backgroundColor: Color(0xff2699FB),
                             child: CircleAvatar(
-                              radius: width * 100,
-                              backgroundImage: ViewModelUserData.userData.value.profilePic.isNullOrBlank ?
-                              AssetImage('assets/images/appLogo/app_logo.png') :
-                              CachedNetworkImageProvider(ViewModelUserData.userData.value.profilePic)
+                                radius: width * 100,
+                                backgroundImage: ViewModelUserData.userData.value.profilePic.isNullOrBlank ?
+                                AssetImage('assets/images/appLogo/app_logo.png') :
+                                CachedNetworkImageProvider(ViewModelUserData.userData.value.profilePic)
                             ),
                           ),
                         ),
@@ -87,7 +87,10 @@ class MyDrawer extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   InkWell(
-                                    onTap: ()=> Get.to(ProfileScreen()),
+                                    onTap: (){
+                                      scaffoldKey.currentState.openEndDrawer();
+                                      Get.to(ProfileScreen());
+                                    },
                                     child: Text(
                                         'View profile',
                                         overflow: TextOverflow.ellipsis,
@@ -154,6 +157,7 @@ class MyDrawer extends StatelessWidget {
   drawerItem(navigation, icon, title) => ListTile(
     onTap: (){
       if(navigation != null){
+        scaffoldKey.currentState.openEndDrawer();
         Get.to(navigation);
       }else{
         Get.snackbar('Unfortunate', 'Screen not ready');

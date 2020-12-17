@@ -31,11 +31,14 @@ class TitleWithTextButton extends StatelessWidget {
             ),
           ),
           SizedBox(height: sizeConfig.height * 10,),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: sizeConfig.getPixels(18),
-              color: AppConst.textBlue
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: sizeConfig.getPixels(18),
+                color: AppConst.textBlue
+              ),
             ),
           ),
         ],
