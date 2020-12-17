@@ -46,11 +46,11 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             SizedBox(height: 10,),
             TextBoxWithTitle(
               title: 'Old Password',
-              controller: widget.oldPasswordController
+              controller: oldPasswordController
             ),
             TextBoxWithTitle(
               title: 'New Password',
-              controller: widget.oldPasswordController
+              controller: newPasswordController
             ),
             Row(
               children: [
