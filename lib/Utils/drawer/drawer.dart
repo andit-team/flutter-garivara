@@ -1,4 +1,5 @@
 
+import 'package:andgarivara_driver/User/view/userProfile.dart';
 import 'package:andgarivara_driver/User/view_model/userData.dart';
 import 'package:andgarivara_driver/Utils/appConst.dart';
 import 'package:andgarivara_driver/Utils/controller/SizeConfigController.dart';
@@ -84,8 +85,7 @@ class MyDrawer extends StatelessWidget {
                                   InkWell(
                                     onTap: (){
                                       scaffoldKey.currentState.openEndDrawer();
-                                      //TODO link to driver profile
-                                     // Get.to(ProfileScreen());
+                                      Get.to(UserProfile());
                                     },
                                     child: Text(
                                         'View profile',
@@ -187,6 +187,15 @@ class DrawerItems{
 
 final List<DrawerItems> drawerItems = [
   DrawerItems(
+      title: 'My Wallet',
+      icon: Icons.person,
+      navigation: DummyPage()
+  ),
+  DrawerItems(
+      title: 'History',
+      icon: Icons.account_balance_wallet
+  ),
+  DrawerItems(
     title: 'Notifications',
     icon: Icons.notifications,
     navigation: DummyPage()
@@ -197,32 +206,8 @@ final List<DrawerItems> drawerItems = [
       navigation: DummyPage()
   ),
   DrawerItems(
-    title: 'Refer a friend',
-    icon: Icons.person,
-    navigation: DummyPage()
-  ),
-  DrawerItems(
-    title: 'Payment',
-    icon: Icons.account_balance_wallet
-  ),
-  DrawerItems(
     title: 'AndGarivara Support',
     icon: Icons.contact_support,
-    navigation: DummyPage()
-  ),
-  DrawerItems(
-    title: 'My Rides',
-    icon: Icons.car_repair,
-    navigation: DummyPage()
-  ),
-  DrawerItems(
-    title: 'My favourite place',
-    icon: Icons.favorite,
-    navigation: DummyPage()
-  ),
-  DrawerItems(
-    title: 'News and offers',
-    icon: Icons.new_releases,
     navigation: DummyPage()
   ),
 ];
