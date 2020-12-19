@@ -1,3 +1,4 @@
+import 'package:andgarivara/User/model/vehicleTypeListModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,8 +8,10 @@ import '../../../../Utils/controller/SizeConfigController.dart';
 
 class VehicleTypesCard extends StatelessWidget {
   final bool selected;
+  final VehicleTypeModel data;
   VehicleTypesCard({
-    this.selected
+    this.selected,
+    this.data
 });
   final GetSizeConfig sizeConfig = Get.find();
   @override
@@ -41,11 +44,11 @@ class VehicleTypesCard extends StatelessWidget {
               width: sizeConfig.width * 200,
               child: CachedNetworkImage(
                 fit: BoxFit.contain,
-                imageUrl: 'https://previews.123rf.com/images/janista/janista1709/janista170900014/85494232-car-black-and-white-sketch-vector-icon.jpg',
+                imageUrl: data.icon,
               ),
             ),
             Text(
-              'Car',
+              data.title,
               style: TextStyle(
                   fontSize: sizeConfig.getPixels(16),
                   fontWeight: selected ? FontWeight.bold : FontWeight.normal,

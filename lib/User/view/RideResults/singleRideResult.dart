@@ -1,3 +1,4 @@
+import 'package:andgarivara/User/model/vehicleSearchResult.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/amenitiesWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/carDetails.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/singleRideResultWidgets/description.dart';
@@ -7,7 +8,6 @@ import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
-import 'package:andgarivara/demo/VehicleResultModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _SingleRideResultState extends State<SingleRideResult> {
   final GetSizeConfig sizeConfig = Get.find();
   double width;
   double height;
-  VehicleResultModel resultModel;
+  VehicleModel resultModel;
   setInitialScreenSize() {
     width = sizeConfig.width.value;
     height = sizeConfig.height.value;
@@ -60,18 +60,21 @@ class _SingleRideResultState extends State<SingleRideResult> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              resultModel.vehicleName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: sizeConfig.getPixels(28),
-                                  fontWeight: FontWeight.bold,
-                                  color: AppConst.textBlue
+                            RichText(
+                              text: TextSpan(
+                                text: resultModel.brandTitle,
+                                style: TextStyle(
+                                    fontSize: sizeConfig.getPixels(28),
+                                    fontWeight: FontWeight.bold,
+                                    color: AppConst.textBlue
+                                ),
+                                children: [TextSpan(
+                                  text: resultModel.model
+                                )]
                               ),
                             ),
                             Text(
-                              resultModel.vehicleLocation,
+                              resultModel.carAddress,
                               style: TextStyle(
                                   fontSize: sizeConfig.getPixels(14),
                                   color: AppConst.themeGrey
@@ -121,9 +124,9 @@ class _SingleRideResultState extends State<SingleRideResult> {
                       AspectRatio(
                         aspectRatio: 334/160,
                         child: Hero(
-                          tag: resultModel.vehicleImage,
+                          tag: resultModel.thumbImage,
                           child: CachedNetworkImage(
-                            imageUrl: resultModel.vehicleImage,
+                            imageUrl: resultModel.thumbImage,
                             fit: BoxFit.contain,
                           ),
                         ),

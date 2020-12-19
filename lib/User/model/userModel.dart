@@ -1,3 +1,5 @@
+import 'package:andgarivara/User/model/idModel.dart';
+
 class UserModel {
   UserModel({
     this.userId,
@@ -17,7 +19,7 @@ class UserModel {
     this.smsNotification,
   });
 
-  UserId userId;
+  IdModel userId;
   String address;
   String country;
   CreateDate createDate;
@@ -34,7 +36,7 @@ class UserModel {
   UserNotification smsNotification;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    userId: UserId.fromJson(json["_id"]),
+    userId: IdModel.fromJson(json["_id"]),
     address: json["address"],
     country: json["country"],
     createDate: CreateDate.fromJson(json["create_date"]),
@@ -83,22 +85,6 @@ class CreateDate {
 
   Map<String, dynamic> toJson() => {
     "\u0024date": date,
-  };
-}
-
-class UserId {
-  UserId({
-    this.oid,
-  });
-
-  String oid;
-
-  factory UserId.fromJson(Map<String, dynamic> json) => UserId(
-    oid: json["\u0024oid"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "\u0024oid": oid,
   };
 }
 

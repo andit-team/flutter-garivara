@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:andgarivara/User/model/vehicleTypeListModel.dart';
+import 'package:andgarivara/User/repository/repoHomeScreen.dart';
 import 'package:andgarivara/User/view/RideResults/rideResults.dart';
 import 'package:andgarivara/User/view/homeScreen/chooseLocation.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/homeTopTextField.dart';
 import 'package:andgarivara/User/view/homeScreen/widgets/vehicleTypes.dart';
 import 'package:andgarivara/User/view/reviewRideScreen.dart';
+import 'package:andgarivara/User/viewModel/viewModelViewScreen.dart';
 import 'package:andgarivara/Utils/controller/rideStatusController.dart';
 import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:andgarivara/Utils/enum.dart';
@@ -60,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   GetRideStatusController rideStatusController = Get.find();
   @override
   void initState() {
-    super.initState();
     functions();
+    super.initState();
   }
 
   @override
@@ -74,8 +77,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         actions: [
           IconButton(
             icon: Icon(Icons.filter_1,color: Colors.red,),
-            onPressed: (){
-              rideStatusController.updateStatus(RideStatus.NONE);
+            onPressed: () async{
+              // rideStatusController.updateStatus(RideStatus.NONE);
+              await RepoHomeScreen.getVehicleTypes();
+
             },
           ),
           IconButton(
@@ -138,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 constraints: BoxConstraints(
                   maxWidth: Get.width,
                   minWidth: Get.width,
-                  // maxHeight: Get.height * .25,
+                  maxHeight: Get.height * .25,
                   minHeight: Get.height * .25,
                 ),
                 decoration: BoxDecoration(
@@ -248,6 +253,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     }
   }
 
+  String selectedVehicleId = '';
   ///   STATUS NONE
   Widget statusNone() => Padding(
     padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
@@ -255,7 +261,28 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        selectVehicleType(),
+        Container(
+          height: sizeConfig.height * 70,
+          padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 35),
+          child: ListView.builder(
+            itemCount: ViewModelHomeScreen.vehicleTypes.length,
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 10),
+            shrinkWrap: true,
+            itemBuilder: (_,index){
+              VehicleTypeModel data = ViewModelHomeScreen.vehicleTypes[index];
+              bool selected = selectedVehicleId == data.id.oid;
+              return GestureDetector(
+                onTap: (){
+                  setState(() {
+                    selectedVehicleId = data.id.oid;
+                  });
+                },
+                child: VehicleTypesCard(selected: selected, data: data),
+              );
+            },
+          ),
+        ),
         Icon(
           Icons.info_outline,
           size: sizeConfig.getPixels(25),
@@ -270,40 +297,16 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         WideRedButton(
             label: StringResources.btnHomeSearchVehicle,
             onPressed: (){
-              Get.to(RideResults());
+              Get.to(RideResults(),arguments: [
+                'rental',
+                selectedVehicleId,
+                pickUp
+              ]);
             }
         )
       ],
     ),
   );
-
-  int selectedVehicle = 0;
-  Widget selectVehicleType(){
-    return Container(
-      height: sizeConfig.height * 70,
-      padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 35),
-      child: ListView.builder(
-        itemCount: 10,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: sizeConfig.width * 10),
-        shrinkWrap: true,
-        itemBuilder: (_,index){
-          return carType(index);
-        },
-      ),
-    );
-  }
-  Widget carType(int index){
-    bool selected = selectedVehicle == index;
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          selectedVehicle = index;
-        });
-      },
-      child: VehicleTypesCard(selected: selected,),
-    );
-  }
 
   ///   STATUS PROCESSING LOOKING FOR VEHICLE
   Widget statusProcessing() => Column(
@@ -1117,6 +1120,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     initialPosition = userLocation.location.value;
     pickUp = initialPosition;
     await setInitialPosition(initialPosition);
+    await RepoHomeScreen.getVehicleTypes();
     setState(() {
       loading = false;
     });
