@@ -92,4 +92,23 @@ class RepoUserProfile{
       return true;
     }
   }
+
+  static changePassword(String oldPass, String newPass) async{
+    try{
+      DBHelper.dio.options.headers["Authorization"] = "Bearer ${ViewModelUserData.userToken.value}";
+      Response response = await DBHelper.dio.put(
+          DotEnv().env['API_URL']+DotEnv().env['changePassword'],
+          data: {
+            "oldPassword": oldPass,
+            "newPassword": newPass
+          }
+      );
+
+      return response.data["error"];
+
+    }catch(e){
+      print(e.toString());
+      return true;
+    }
+  }
 }
