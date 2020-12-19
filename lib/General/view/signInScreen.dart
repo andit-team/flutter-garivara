@@ -1,6 +1,9 @@
 
 import 'package:andgarivara_driver/General/repository/repoLogin.dart';
+import 'package:andgarivara_driver/General/view/forgotPasswordScreen.dart';
+import 'package:andgarivara_driver/User/view/home.dart';
 import 'package:andgarivara_driver/Utils/controller/SizeConfigController.dart';
+import 'package:andgarivara_driver/Utils/dummyPage.dart';
 import 'package:andgarivara_driver/Utils/widgets/checkbox.dart';
 import 'package:andgarivara_driver/Utils/widgets/redButton.dart';
 import 'package:andgarivara_driver/Utils/widgets/screenLoader.dart';
@@ -71,38 +74,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     logo(),
                     upperTitle(),
                     form(),
-                    Padding(
-                      padding: EdgeInsets.symmetric( vertical: height * 10),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: width * 250,
-                                height: height * 5,
-                                color: Color(0xff707070),
-                              ),
-                              Text(
-                                'Or connect with',
-                                style: TextStyle(fontSize: getSizeConfig.getPixels(16),
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff34415F)
-                                ),
-                              ),
-                              Container(
-                                width: width * 250,
-                                height: height * 5,
-                                color: Color(0xff707070),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    socialMedia(),
-                    haveAccount(),
                   ],
                 ),
               ),
@@ -117,10 +88,10 @@ class _SignInScreenState extends State<SignInScreen> {
     return Padding(
       padding: EdgeInsets.symmetric( vertical: height * 10),
       child: Container(
-        height: height * 250,
+        height: height * 170,
         width: width * 800,
         child: Image.asset(
-          'assets/images/appLogo/andgarivara_hero.gif',
+          'assets/images/andGariVaraWithCar.png',
           // fit: BoxFit.cover,
         ),
       ),
@@ -133,7 +104,7 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Container(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Ride with Andgarivara',
+          'Connect to Andgarivara',
           style: TextStyle(
             fontSize: getSizeConfig.width * 60,
             color: Colors.black
@@ -160,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   passwordTextField(),
                   Padding(
                     padding:
-                    EdgeInsets.symmetric(vertical: height * 10),
+                    EdgeInsets.symmetric(vertical: height * 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -259,7 +230,7 @@ class _SignInScreenState extends State<SignInScreen> {
   GestureDetector forgotPassword() {
     return GestureDetector(
       onTap:(){
-       // Get.to(ForgotPassword());
+        Get.to(ForgotPassword());
       },
       child: Text(
         "Forgot password?",
@@ -273,7 +244,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Padding signInButton() {
     return Padding(
       padding:
-      EdgeInsets.symmetric(vertical: height * 10),
+      EdgeInsets.symmetric(vertical: height * 30),
       child: RedButton(
         title: 'Login',
         function: () async{
@@ -287,7 +258,7 @@ class _SignInScreenState extends State<SignInScreen> {
             if(error){
               Snack.bottom('Error', 'Login failed');
             }else{
-             // Get.offAll(HomeBody());
+              Get.offAll(HomeBody());
             }
             setState(() {
               loading = false;
@@ -297,63 +268,6 @@ class _SignInScreenState extends State<SignInScreen> {
           }
         },
       ),
-    );
-  }
-
-  Padding socialMedia() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: height*10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SignInButton(
-            Buttons.Facebook,
-            mini: false,
-            onPressed: () {
-              Get.snackbar('Facebook', 'LinkedIn Signed Up');
-            },
-          ),
-          SignInButton(
-            Buttons.Twitter,
-            mini: false,
-            onPressed: () {
-              Get.snackbar('Twitter', 'Twitter Signed Up');
-            },
-          ),
-          SignInButton(
-            Buttons.Google,
-            mini: false,
-            onPressed: () {
-              Get.snackbar('Google', 'Google Signed Up');
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Row haveAccount() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Do not have an account? ",
-          style: TextStyle(
-            fontSize: getSizeConfig.width * 40,
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-           // Get.to(SignUpScreen());
-          },
-          child: Text(
-            "Sign Up!",
-            style: TextStyle(
-                fontSize: getSizeConfig.width * 40,
-                color: Color(0xff0A98FE)),
-          ),
-        ),
-      ],
     );
   }
 }

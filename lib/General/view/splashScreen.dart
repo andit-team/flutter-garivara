@@ -55,7 +55,6 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       super.initState();
       getUserLocation();
-      // GetStorage().erase();
       String fLogin = GetStorage().read('firstTimeStart');
       firstLogin = fLogin.isNull ? true : false;
 
@@ -84,11 +83,12 @@ class _SplashScreenState extends State<SplashScreen> {
             fit: BoxFit.cover,
           ),
           Container(
-            color: AppConst.appRed,
+            color: AppConst.appRed.withOpacity(0.8),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 100,vertical: height * 150),
             child: Column(
+
               children: [
                 Center(
                   child: Card(
@@ -120,12 +120,15 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 SizedBox(height: height * 20,),
-                Text(
-                  'Safety and security is our concern',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      letterSpacing: 0.5
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Complete Jobs \& Earn',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        letterSpacing: 0.5
+                    ),
                   ),
                 ),
                 Spacer(),

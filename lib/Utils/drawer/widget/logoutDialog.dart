@@ -1,4 +1,5 @@
 
+import 'package:andgarivara_driver/General/view/signInScreen.dart';
 import 'package:andgarivara_driver/Utils/controller/SizeConfigController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,8 +30,7 @@ class LogoutDialog extends StatelessWidget {
             FlatButton(
               onPressed: (){
                 localStorage.erase();
-                //TODO add signout page
-                //Get.to(SignInScreen());
+                Get.to(SignInScreen());
               },
               color: Color(0xffC8102E),
               child: Container(
