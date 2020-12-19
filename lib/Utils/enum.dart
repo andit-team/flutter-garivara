@@ -1,0 +1,7 @@
+enum RideStatus{
+  NONE,
+  PROCESSING,
+  FOUND,
+  RUNNING,
+  FINISHED
+}
