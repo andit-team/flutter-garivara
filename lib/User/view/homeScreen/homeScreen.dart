@@ -6,6 +6,7 @@ import 'package:andgarivara_driver/Utils/controller/userLocation.dart';
 import 'package:andgarivara_driver/Utils/widgets/jumpingDots.dart';
 import 'package:andgarivara_driver/Utils/widgets/loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -29,8 +30,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   PolylinePoints polylinePoints = PolylinePoints();
   Set<Polyline> _polyLines = Set<Polyline>();
 
-  Marker marker;
-  Circle circle;
+  Set<Marker> _markers = Set<Marker>();
+  Set<Circle> _circles = Set<Circle>();
+
 
   final GetSizeConfig sizeConfig = Get.find();
   GetUserLocation userLocation = Get.find();
@@ -53,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         duration: AppConst.duration,
         firstChild: Loader(),
         secondChild: googleMap(),
+        //TODO crossFades
         crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
       ),
     );
@@ -80,8 +83,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               onMapCreated: _onMapCreated,
               //onTap: setNewLocation,
               polylines: _polyLines,
-              markers: Set.of((marker != null) ? [marker] : []),
-              circles: Set.of((circle != null) ? [circle] : []),
+              markers: _markers,
+              circles: _circles,
             )
         ),
         Positioned(
@@ -100,83 +103,91 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
 
-  Future<Uint8List> getMarker() async {
-    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/images/car_icon.png");
-    return byteData.buffer.asUint8List();
-  }
-
-
   functions() async{
-
-
-    Uint8List imageData = await getMarker();
-
-    //await setInitialPosition(userPosition);
+    Uint8List driverImageData = await getDriverMarker();
+    Uint8List destinationImageData = await getDestinationMarker();
+    LatLng staticLatLng = LatLng(22.8144074,89.5663444);
+    destinationMarkerAndCircle(destinationImageData,'customer','customerRadius',staticLatLng);
 
     Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.best,intervalDuration: Duration(milliseconds: 2000)).listen((Position position) {
-      userLocation.updateLocation(LatLng(position.latitude, position.longitude));
-      updateMarkerAndCircle(position,imageData);
+      LatLng latLng = LatLng(position.latitude, position.longitude);
+      userLocation.updateLocation(latLng);
+      updateMarkerAndCircle(position,driverImageData,'driver','driverRadius',latLng);
     });
+
+    _setPolyLines(userLocation.location.value,staticLatLng);
 
     setState(() {
       loading = false;
     });
   }
 
-  void updateMarkerAndCircle(position,imageData) {
-    LatLng latLng = LatLng(position.latitude, position.longitude);
+  Future<Uint8List> getDriverMarker() async {
+    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/images/car_icon.png");
+    return byteData.buffer.asUint8List();
+  }
+
+  Future<Uint8List> getDestinationMarker() async {
+    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/images/passenger_icon.png");
+    return byteData.buffer.asUint8List();
+  }
+
+  void destinationMarkerAndCircle(imageData,vehicleMarker,vehicleRadius,staticLatLng) {
+
     this.setState(() {
-      marker = Marker(
-          markerId: MarkerId("home"),
-          position: latLng,
-          rotation: position.heading,
-          draggable: false,
-          zIndex: 2,
-          flat: true,
-          anchor: Offset(0.5, 0.5),
-          icon: BitmapDescriptor.fromBytes(imageData));
-      circle = Circle(
-          circleId: CircleId("car"),
-          center: latLng,
-          radius: position.accuracy,
+      _markers.add(
+          Marker(
+              markerId: MarkerId(vehicleMarker),
+              position: staticLatLng,
+              draggable: false,
+              zIndex: 2,
+              flat: true,
+              anchor: Offset(0.5, 0.5),
+              icon: BitmapDescriptor.fromBytes(imageData),
+          )
+      );
+      _circles.add(Circle(
+          circleId: CircleId(vehicleRadius),
+          center: staticLatLng,
+          radius: 3000,
           zIndex: 1,
           strokeColor: Colors.blue.withOpacity(0.2),
-          fillColor: Colors.blue.withAlpha(70).withOpacity(0.2));
+          fillColor: Colors.blue.withAlpha(70).withOpacity(0.2),
+      )
+      );
     });
   }
 
-/*  setInitialPosition(LatLng initialPosition) async{
-    initialCameraPosition = CameraPosition(
-        target: initialPosition,
-        zoom: 18,
-        tilt: 15
-    );
-    await addMarker(initialPosition,'currentMarker');
-  }*/
+  void updateMarkerAndCircle(position,imageData,vehicleMarker,vehicleRadius,latLng) {
 
+    this.setState(() {
+      _markers.add(
+          Marker(
+              markerId: MarkerId(vehicleMarker),
+              position: latLng,
+              rotation: position.heading,
+              draggable: false,
+              zIndex: 2,
+              flat: true,
+              anchor: Offset(0.5, 0.5),
+              icon: BitmapDescriptor.fromBytes(imageData))
+      );
+      _circles.add(
+          Circle(
+              circleId: CircleId(vehicleRadius),
+              center: latLng,
+              zIndex: 1,
+              strokeColor: Colors.blue.withOpacity(0.2),
+              fillColor: Colors.blue.withAlpha(70).withOpacity(0.2))
+      );
+    });
+  }
 
   _onMapCreated(GoogleMapController controller) {
     setState(() {
       mapController.complete(controller);
     });
   }
-
-/*  setNewLocation(LatLng location) {
-    setState(() {
-      addMarker(location);
-    });
-  }*/
-
-/*  addMarker(LatLng location, [String s]) async{
-    position = location;
-    gMarker.add(Marker(
-        markerId: MarkerId(s ?? 'userLocation'),
-        position: location
-    ));
-
-    await _updateCameraPosition(location);
-  }*/
-
 
   _updateCameraPosition(loc) async {
     CameraPosition cPosition = CameraPosition(
@@ -187,4 +198,25 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     GoogleMapController controller = await mapController.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
   }
+  _setPolyLines(LatLng source, LatLng destination)  {
+    polylineCoordinates.clear();
+    polylinePoints.getRouteBetweenCoordinates(DotEnv().env['google_api_key'],
+        PointLatLng(source.latitude, source.longitude),
+        PointLatLng(destination.latitude, destination.longitude)).then((valuePoints) {
+      if (valuePoints.points.isNotEmpty) {
+        valuePoints.points.forEach((PointLatLng point) {
+          polylineCoordinates.add(LatLng(point.latitude, point.longitude));});
+        setState(() {
+          _polyLines.add(Polyline(
+              width: 2,
+              startCap: Cap.roundCap,
+              endCap: Cap.roundCap,
+              polylineId: PolylineId("poly"),
+              color: AppConst.appBlue,
+              points: polylineCoordinates));
+        });
+      }
+    });
+  }
+
 }

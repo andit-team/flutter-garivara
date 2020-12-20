@@ -44,10 +44,10 @@ class _HomeBodyState extends State<HomeBody> {
                   fontSize: getSizeConfig.getPixels(20),
                 ),
               ),
-              Container(
+         /*     Container(
                   width: width * 100,
                   height: height * 30,
-                  child: JumpingDots(numberOfDots: 3,height: height,width: width,)),
+                  child: JumpingDots(numberOfDots: 3,height: height,width: width,)),*/
             ],
           ),
           backgroundColor: Colors.white,
