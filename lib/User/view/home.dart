@@ -3,6 +3,7 @@ import 'package:andgarivara_driver/Utils/appConst.dart';
 import 'package:andgarivara_driver/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara_driver/Utils/drawer/drawer.dart';
 import 'package:andgarivara_driver/Utils/dummyPage.dart';
+import 'package:andgarivara_driver/Utils/widgets/jumpingDots.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,20 +35,27 @@ class _HomeBodyState extends State<HomeBody> {
         key: _scaffoldKey,
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Center(
-            child: Text(cupertinoValue?'Online':'Offline',
-              style: TextStyle(
+          title: Row(
+            children: [
+              Text(
+                'Searching',
+                style: TextStyle(
                   color: Colors.black,
-                fontSize: getSizeConfig.getPixels(20),
+                  fontSize: getSizeConfig.getPixels(20),
+                ),
               ),
-            ),
+              Container(
+                  width: width * 100,
+                  height: height * 30,
+                  child: JumpingDots(numberOfDots: 3,height: height,width: width,)),
+            ],
           ),
           backgroundColor: Colors.white,
           elevation: 4,
           leading: IconButton(
               onPressed: () => _scaffoldKey.currentState.openDrawer(),
               icon: svgIcon),
-          actions: [
+/*          actions: [
             Transform.scale(
               scale: 0.8,
               child: CupertinoSwitch(
@@ -61,7 +69,7 @@ class _HomeBodyState extends State<HomeBody> {
                 },
               ),
             ),
-          ],
+          ],*/
         ),
         drawer: MyDrawer(
           height: height,

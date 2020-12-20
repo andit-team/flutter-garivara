@@ -7,6 +7,7 @@ import 'package:andgarivara_driver/Utils/controller/userLocation.dart';
 import 'package:andgarivara_driver/Utils/widgets/wideRedButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -24,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   double height;
 
   bool firstLogin = true;
+  bool loading = true;
 
   final List<String> language = [
     'English',
@@ -68,6 +70,9 @@ class _SplashScreenState extends State<SplashScreen> {
     LatLng latLng;
     latLng = LatLng(position.latitude, position.longitude);
     location.updateLocation(latLng);
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -132,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 Spacer(),
-                WideRedButton(
+                loading ? SpinKitCircle(color: AppConst.appBlue,) : WideRedButton(
                   label: 'Go!',
                   color: Colors.white,
                   onPressed: (){
