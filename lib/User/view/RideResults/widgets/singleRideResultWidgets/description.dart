@@ -1,6 +1,6 @@
+import 'package:andgarivara/User/viewModel/viewModelRideResutl.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
-import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,7 +32,7 @@ class DescriptionWidget extends StatelessWidget {
               padding: EdgeInsets.all(sizeConfig.getPixels(12)),
               child: RichText(
                 text: TextSpan(
-                  text: StringResources.carDescription,
+                  text: ViewModelRideResult.vehicleData.value.description ?? 'Loading',
                   style: TextStyle(
                     color: AppConst.textLight,
                   ),

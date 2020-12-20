@@ -6,7 +6,7 @@ class IdModel {
   String oid;
 
   factory IdModel.fromJson(Map<String, dynamic> json) => IdModel(
-    oid: json["\u0024oid"],
+    oid: json["\u0024oid"] ?? 'empty',
   );
 
   Map<String, dynamic> toJson() => {

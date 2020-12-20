@@ -1,3 +1,4 @@
+import 'package:andgarivara/User/viewModel/viewModelRideResutl.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:flutter/material.dart';
@@ -34,28 +35,51 @@ class AmenitiesWidget extends StatelessWidget {
                 spacing: sizeConfig.width * 50,
                 runSpacing: sizeConfig.height * 10,
                 children: [
-                  for(int i = 0; i<8;i++)
-                    Container(
-                      width: sizeConfig.width * 400,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.circle,
-                            size: sizeConfig.getPixels(15),
-                            color: AppConst.textLight,
-                          ),
-                          Text(
-                              '  Amenities ${i+1}'
-                          )
-                        ],
-                      ),
-                    )
+                  AmenitiesItem(title: 'AC', status: ViewModelRideResult.vehicleData.value.amenities.ac),
+                  AmenitiesItem(title: 'Air Bags', status: ViewModelRideResult.vehicleData.value.amenities.airBags),
+                  AmenitiesItem(title: 'Alloy Rims', status: ViewModelRideResult.vehicleData.value.amenities.alloyRims),
+                  AmenitiesItem(title: 'CD Player', status: ViewModelRideResult.vehicleData.value.amenities.cdPlayer),
+                  AmenitiesItem(title: 'FM Radio', status: ViewModelRideResult.vehicleData.value.amenities.fmRadio),
+                  AmenitiesItem(title: 'Navigation System', status: ViewModelRideResult.vehicleData.value.amenities.navigationSystem),
+                  AmenitiesItem(title: 'Power Locks', status: ViewModelRideResult.vehicleData.value.amenities.powerLocks),
+                  AmenitiesItem(title: 'Power Mirrors', status: ViewModelRideResult.vehicleData.value.amenities.powerMirrors),
                 ],
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AmenitiesItem extends StatelessWidget {
+  final GetSizeConfig sizeConfig = Get.find();
+  final String title;
+  final bool status;
+  AmenitiesItem({
+    @required this.title,
+    @required this.status
+});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: sizeConfig.width * 400,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            status ? Icons.check : Icons.do_not_disturb_alt,
+            size: sizeConfig.getPixels(15),
+            color: status ? AppConst.appGreen : AppConst.appRed,
+          ),
+          Text(
+            ' $title',
+            style: TextStyle(
+                color: AppConst.textBlue
+            ),
+          )
+        ],
       ),
     );
   }

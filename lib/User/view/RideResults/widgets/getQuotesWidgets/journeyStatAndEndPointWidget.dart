@@ -1,3 +1,4 @@
+import 'package:andgarivara/User/view/homeScreen/homeScreen.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
@@ -7,12 +8,8 @@ import 'package:get/get.dart';
 
 class JourneyStatAndEndPointWidget extends StatelessWidget {
   final GetSizeConfig sizeConfig = Get.find();
-  final TextEditingController endPointController;
-  final TextEditingController startPointController;
-  JourneyStatAndEndPointWidget({
-    @required this.endPointController,
-    @required this.startPointController
-});
+  final TextEditingController startPointController = TextEditingController(text: pickUpAddress.addressLine);
+  final TextEditingController endPointController = TextEditingController(text: dropOffAddress.addressLine);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,17 +27,15 @@ class JourneyStatAndEndPointWidget extends StatelessWidget {
           SizedBox(height: sizeConfig.height * 7,),
           LightTextField(
             hintText: 'From',
-            suffix: true,
             controller: startPointController
           ),
           SizedBox(height: sizeConfig.height * 10,),
           LightTextField(
             hintText: 'To',
-            suffix: true,
             controller: endPointController
           ),
           SizedBox(height: sizeConfig.height * 7,),
-          Row(
+          /*Row(
             children: [
               Icon(
                 Icons.location_on_rounded,
@@ -54,7 +49,7 @@ class JourneyStatAndEndPointWidget extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          )*/
         ],
       ),
     );

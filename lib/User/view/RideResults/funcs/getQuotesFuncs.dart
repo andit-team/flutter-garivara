@@ -10,9 +10,9 @@ class FuncGetQuotes{
       lastDate: DateTime(2100)
     );
     if (picked != null) {
-      return DateFormat('dd MMM yyy').format(picked);
+      return DateFormat('yyyy-MM-dd').format(picked);
     }else{
-      return DateFormat('dd MMM yyy').format(DateTime.now());
+      return DateFormat('yyyy-MM-dd').format(DateTime.now());
     }
   }
 

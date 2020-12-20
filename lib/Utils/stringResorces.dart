@@ -32,7 +32,7 @@ class StringResources{
   static final String getQuoteHeaderPickupTime = 'Select your pickup time';
   static final String getQuoteJourneyDuration = 'Choose your journey duration';
   static final String getQuoteFuelPackage = 'Choose your fuel package type';
-  static final String getQuoteStartEnd = 'Choose journey start and end point';
+  static final String getQuoteStartEnd = 'Journey start and end point';
   static final String getQuoteFooter = 'Choose journey start and end point';
 
 

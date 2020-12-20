@@ -6,6 +6,7 @@ import 'package:andgarivara/Utils/controller/userLocation.dart';
 import 'package:andgarivara/Utils/widgets/wideRedButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -60,15 +61,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
     }
   }
+  LatLng latLng;
 
   getUserLocation() async{
     GetUserLocation location = Get.find();
     Position position;
     position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    LatLng latLng;
     latLng = LatLng(position.latitude, position.longitude);
     location.updateLocation(latLng);
+    setState(() {loading = false;});
   }
+
+  bool loading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +132,17 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 Spacer(),
-                WideRedButton(
-                  label: 'Go!',
-                  color: Colors.white,
-                  onPressed: (){
-                    Get.offAll(firstLogin ? IntroScreenState() : SignInScreen());
-                  },
+                AnimatedCrossFade(
+                  firstChild: SpinKitCircle(color: AppConst.appBlue,),
+                  secondChild: WideRedButton(
+                    label: 'Go!',
+                    color: Colors.white,
+                    onPressed: (){
+                      Get.offAll(firstLogin ? IntroScreenState() : SignInScreen());
+                    },
+                  ),
+                  crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                  duration: AppConst.duration
                 ),
                 SizedBox(height: height * 15,),
                 Row(

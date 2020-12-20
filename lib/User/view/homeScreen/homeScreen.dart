@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-
+import 'dart:math';
 import 'package:andgarivara/User/model/vehicleTypeListModel.dart';
 import 'package:andgarivara/User/repository/repoHomeScreen.dart';
 import 'package:andgarivara/User/view/RideResults/rideResults.dart';
@@ -15,6 +15,7 @@ import 'package:andgarivara/Utils/enum.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/lightTextField.dart';
 import 'package:andgarivara/Utils/widgets/loader.dart';
+import 'package:andgarivara/Utils/widgets/snackBar.dart';
 import 'package:andgarivara/Utils/widgets/wideRedButton.dart';
 import 'package:andgarivara/Utils/widgets/wideWhiteButton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_simple_rating_bar/flutter_simple_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -35,6 +37,10 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+
+Address pickUpAddress;
+Address dropOffAddress;
+double distance = 0.0;
 
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
 
@@ -73,42 +79,42 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     return Scaffold(
       extendBodyBehindAppBar: true,
       // TODO delete appbar in the end
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_1,color: Colors.red,),
-            onPressed: () async{
-              // rideStatusController.updateStatus(RideStatus.NONE);
-              await RepoHomeScreen.getVehicleTypes();
-
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_2,color: Colors.red,),
-            onPressed: (){
-              rideStatusController.updateStatus(RideStatus.PROCESSING);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_3,color: Colors.red,),
-            onPressed: (){
-              rideStatusController.updateStatus(RideStatus.FOUND);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_4,color: Colors.red,),
-            onPressed: (){
-              rideStatusController.updateStatus(RideStatus.RUNNING);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_5,color: Colors.red,),
-            onPressed: (){
-              rideStatusController.updateStatus(RideStatus.FINISHED);
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.filter_1,color: Colors.red,),
+      //       onPressed: () async{
+      //         // rideStatusController.updateStatus(RideStatus.NONE);
+      //         await RepoHomeScreen.getVehicleTypes();
+      //
+      //       },
+      //     ),
+      //     IconButton(
+      //       icon: Icon(Icons.filter_2,color: Colors.red,),
+      //       onPressed: (){
+      //         rideStatusController.updateStatus(RideStatus.PROCESSING);
+      //       },
+      //     ),
+      //     IconButton(
+      //       icon: Icon(Icons.filter_3,color: Colors.red,),
+      //       onPressed: (){
+      //         rideStatusController.updateStatus(RideStatus.FOUND);
+      //       },
+      //     ),
+      //     IconButton(
+      //       icon: Icon(Icons.filter_4,color: Colors.red,),
+      //       onPressed: (){
+      //         rideStatusController.updateStatus(RideStatus.RUNNING);
+      //       },
+      //     ),
+      //     IconButton(
+      //       icon: Icon(Icons.filter_5,color: Colors.red,),
+      //       onPressed: (){
+      //         rideStatusController.updateStatus(RideStatus.FINISHED);
+      //       },
+      //     ),
+      //   ],
+      // ),
       body: Container(
         height: Get.height,
         width: double.infinity,
@@ -188,8 +194,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     );
   }
 
-  Address pickUpAddress;
-  Address dropOffAddress;
+
 
   LatLng pickUp;
   LatLng dropOff;
@@ -297,11 +302,17 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         WideRedButton(
             label: StringResources.btnHomeSearchVehicle,
             onPressed: (){
-              Get.to(RideResults(),arguments: [
-                'rental',
-                selectedVehicleId,
-                pickUp
-              ]);
+              if(selectedVehicleId == ''){
+                Snack.top('Hey!!', 'Choose a Vehicle Type');
+              }else if(dropOff == null){
+                Snack.top('Hey!!', 'Choose a Drop off location');
+              }else{
+                Get.to(RideResults(),arguments: [
+                  'rental',
+                  selectedVehicleId,
+                  pickUp
+                ]);
+              }
             }
         )
       ],
@@ -1215,13 +1226,13 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   _setPolyLines(LatLng pickUp, LatLng dropOff)  {
     if(pickUpAddress != null && dropOffAddress !=null){
       polylineCoordinates.clear();
-      polylinePoints.getRouteBetweenCoordinates(DotEnv().env['google_api_key'],
+      polylinePoints.getRouteBetweenCoordinates(
+          DotEnv().env['google_api_key'],
           PointLatLng(pickUp.latitude, pickUp.longitude),
           PointLatLng(dropOff.latitude, dropOff.longitude)).then((valuePoints) {
         if (valuePoints.points.isNotEmpty) {
           valuePoints.points.forEach((PointLatLng point) {
             polylineCoordinates.add(LatLng(point.latitude, point.longitude));});
-          // _getDistance(polylineCoordinates,'Destination');
           setState(() {
             gMarker.clear();
             addMarker(pickUp,'pickUp');
@@ -1236,10 +1247,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           });
         }
       });
+      distance = Geolocator.distanceBetween(pickUp.latitude, pickUp.longitude, dropOff.latitude, dropOff.longitude);
+      print(distance);
     }
   }
-
-
 
 
 

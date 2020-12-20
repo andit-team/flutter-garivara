@@ -1,6 +1,7 @@
+import 'package:andgarivara/User/model/vehicleDetails.dart';
+import 'package:andgarivara/User/viewModel/viewModelRideResutl.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
-import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class DriverDetailsWidget extends StatelessWidget {
   final GetSizeConfig sizeConfig = Get.find();
   @override
   Widget build(BuildContext context) {
+    DriverDetail detail = ViewModelRideResult.vehicleData.value.driverDetails[0];
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(15)),
       child: Card(
@@ -39,7 +41,7 @@ class DriverDetailsWidget extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         backgroundImage: CachedNetworkImageProvider(
-                          StringResources.driverImage
+                          detail.image
                         ),
                         radius: sizeConfig.getPixels(40),
                       ),
@@ -57,7 +59,7 @@ class DriverDetailsWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'Karim Molla',
+                        detail.name,
                         style: TextStyle(
                           fontSize: sizeConfig.getPixels(20),
                           fontWeight: FontWeight.bold

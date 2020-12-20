@@ -1,3 +1,4 @@
+import 'package:andgarivara/User/viewModel/viewModelRideResutl.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
@@ -40,7 +41,7 @@ class ChooseFuelPackageTypeWidget extends StatelessWidget {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           hint: Text(
-                            'Days',
+                            'Fuel Type',
                             style: TextStyle(
                                 color: Color(0xffD2D2D2)
                             ),
@@ -53,13 +54,13 @@ class ChooseFuelPackageTypeWidget extends StatelessWidget {
                           },
                           items: [
                             DropdownMenuItem(
-                              value: 'Included Fuel',
+                              value: 'Included',
                               child: Text(
                                 'Included Fuel'
                               )
                             ),
                             DropdownMenuItem(
-                              value: 'Excluded Fuel',
+                              value: 'Excluded',
                               child: Text(
                                 'Excluded Fuel'
                               )
@@ -78,7 +79,14 @@ class ChooseFuelPackageTypeWidget extends StatelessWidget {
                     AwesomeDialog(
                       context: context,
                       dialogType: DialogType.INFO,
-                      body: Image.asset('assets/demo/fuelInfo.png'),
+                      body: Column(
+                        children: [
+                          RowItem(label: 'Fuel Type', value: ViewModelRideResult.vehicleData.value.fuelTypeDetails[0].title),
+                          RowItem(label: 'Fuel Rate', value: ViewModelRideResult.vehicleData.value.fuelTypeDetails[0].rate),
+                          RowItem(label: 'Vehicle Mileage', value: ViewModelRideResult.vehicleData.value.millage),
+                          RowItem(label: 'Cost per/Km', value: fuelTypeController.text == 'included' ? ViewModelRideResult.vehicleData.value.serviceDetails.perHourRentWithFuel : ViewModelRideResult.vehicleData.value.serviceDetails.perHourRentWithoutFuel),
+                        ],
+                      ),
                       btnCancelOnPress: (){}
                     )..show();
                   },
@@ -100,6 +108,35 @@ class ChooseFuelPackageTypeWidget extends StatelessWidget {
               )
             ],
           )
+        ],
+      ),
+    );
+  }
+}
+
+class RowItem extends StatelessWidget {
+  final String label;
+  final String value;
+  RowItem({this.label, this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              label
+            ),
+          ),
+          Text(' =  '),
+          Expanded(
+            flex: 1,
+            child: Text(
+              value
+            ),
+          ),
         ],
       ),
     );

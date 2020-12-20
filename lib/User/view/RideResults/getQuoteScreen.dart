@@ -1,14 +1,17 @@
+import 'package:andgarivara/User/repository/repoRideResult.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/chooseFuelPackageTypeWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/floatingWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/journeyDurationWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/journeyStatAndEndPointWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/pickJourneyDateWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/pickUpTimeWidget.dart';
+import 'package:andgarivara/User/viewModel/viewModelRideResutl.dart';
 import 'package:andgarivara/Utils/appConst.dart';
 import 'package:andgarivara/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara/Utils/stringResorces.dart';
 import 'package:andgarivara/Utils/widgets/basicHeaderWidget.dart';
 import 'package:andgarivara/Utils/widgets/drawerlessAPpBar.dart';
+import 'package:andgarivara/Utils/widgets/snackBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,10 +32,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
   TextEditingController timeController = TextEditingController();
   TextEditingController durationTypeController = TextEditingController(text: 'Days');
 
-  TextEditingController fuelTypeController = TextEditingController(text: 'Included Fuel');
-
-  TextEditingController startPointController = TextEditingController();
-  TextEditingController endPointController = TextEditingController();
+  TextEditingController fuelTypeController = TextEditingController(text: 'Included');
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,19 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
           widget: Padding(
             padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
             child: InkWell(
-              onTap: (){
-                Get.to(CostDetailsScreen());
+              onTap: () async{
+                if(journeyDateController.text.isEmpty){
+                  Snack.top('Wait!', 'Please choose a date');
+                }else if(pickUpTimeController.text.isEmpty){
+                  Snack.top('Wait!', 'Please choose a pick up time');
+                }else if(timeController.text.isEmpty){
+                  Snack.top('Wait!', 'Please choose a time');
+                }else if(fuelTypeController.text.isEmpty){
+                  Snack.top('Wait!', 'Please choose a fuel type');
+                }else{
+                  await RepoRideResult.getQuote(ViewModelRideResult.vehicleData.value.id.oid, journeyDateController.text, pickUpTimeController.text, timeController.text, durationTypeController.text.toLowerCase(), fuelTypeController.text);
+                  // Get.to(CostDetailsScreen());
+                }
               },
               borderRadius: BorderRadius.circular(sizeConfig.width * 25),
               child: Container(
@@ -77,6 +88,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 20,),
                     BasicHeaderWidget(
                       title: StringResources.getQuoteTitle,
                       subtitle: StringResources.getQuoteSubtitle,
@@ -85,7 +97,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                     PickUptimeWidget(pickUpTimeController: pickUpTimeController),
                     JourneyDurationWidget(timeController: timeController, durationTypeController: durationTypeController),
                     ChooseFuelPackageTypeWidget(fuelTypeController: fuelTypeController),
-                    JourneyStatAndEndPointWidget(startPointController: startPointController, endPointController: endPointController),
+                    JourneyStatAndEndPointWidget(),
                   ],
                 ),
               ),
