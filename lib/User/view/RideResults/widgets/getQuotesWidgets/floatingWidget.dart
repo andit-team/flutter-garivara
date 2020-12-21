@@ -5,17 +5,17 @@ import 'package:get/get.dart';
 class FloatingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return DraggableFloatingActionButton(
+    return Obx(()=>DraggableFloatingActionButton(
       offset: new Offset(270, 120),
       backgroundColor: Theme.of(context).accentColor,
       icon: Icons.monetization_on_outlined,
-      label: '1213.36',
+      label: 'CostDetailsScreen().grandTotal.toString()',
       onPressed: () => Get.to(CostDetailsScreen()),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       appContext: context,
       appBar: AppBar(),
       data: 'your_data',
-    );
+    ));
   }
 }
 

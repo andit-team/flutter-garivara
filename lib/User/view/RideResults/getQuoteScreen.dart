@@ -1,6 +1,6 @@
+import 'package:andgarivara/User/model/costDetailsModel.dart';
 import 'package:andgarivara/User/repository/repoRideResult.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/chooseFuelPackageTypeWidget.dart';
-import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/floatingWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/journeyDurationWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/journeyStatAndEndPointWidget.dart';
 import 'package:andgarivara/User/view/RideResults/widgets/getQuotesWidgets/pickJourneyDateWidget.dart';
@@ -44,18 +44,23 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
           widget: Padding(
             padding: EdgeInsets.symmetric(horizontal: sizeConfig.getPixels(20)),
             child: InkWell(
-              onTap: () async{
+              onTap: () {
                 if(journeyDateController.text.isEmpty){
                   Snack.top('Wait!', 'Please choose a date');
                 }else if(pickUpTimeController.text.isEmpty){
                   Snack.top('Wait!', 'Please choose a pick up time');
                 }else if(timeController.text.isEmpty){
-                  Snack.top('Wait!', 'Please choose a time');
-                }else if(fuelTypeController.text.isEmpty){
-                  Snack.top('Wait!', 'Please choose a fuel type');
+                  Snack.top('Wait!', 'Please choose a duration');
                 }else{
-                  await RepoRideResult.getQuote(ViewModelRideResult.vehicleData.value.id.oid, journeyDateController.text, pickUpTimeController.text, timeController.text, durationTypeController.text.toLowerCase(), fuelTypeController.text);
-                  // Get.to(CostDetailsScreen());
+                  Get.to(CostDetailsScreen(),arguments: CostDetailsModel(
+                      journeyDate: journeyDateController.text,
+                      pickUpTime: pickUpTimeController.text,
+                      duration: int.parse(timeController.text),
+                      durationType: durationTypeController.text.toLowerCase(),
+                      fuelType: fuelTypeController.text.toLowerCase()
+                    )
+                  );
+                  ViewModelRideResult.rentRequest = RepoRideResult.createModel(ViewModelRideResult.vehicleData.value.id.oid, journeyDateController.text, pickUpTimeController.text, int.parse(timeController.text), durationTypeController.text.toLowerCase(), fuelTypeController.text);
                 }
               },
               borderRadius: BorderRadius.circular(sizeConfig.width * 25),
@@ -88,7 +93,6 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20,),
                     BasicHeaderWidget(
                       title: StringResources.getQuoteTitle,
                       subtitle: StringResources.getQuoteSubtitle,
@@ -102,7 +106,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 ),
               ),
             ),
-            FloatingWidget()
+            // FloatingWidget()
           ],
         ),
       ),

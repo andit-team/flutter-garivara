@@ -349,7 +349,7 @@ class FuelTypeDetail {
   });
 
   IdModel id;
-  dynamic rate;
+  double rate;
   String title;
 
   factory FuelTypeDetail.fromJson(Map<String, dynamic> json) => FuelTypeDetail(

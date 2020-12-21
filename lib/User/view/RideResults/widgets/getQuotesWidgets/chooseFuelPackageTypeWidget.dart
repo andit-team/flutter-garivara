@@ -82,7 +82,7 @@ class ChooseFuelPackageTypeWidget extends StatelessWidget {
                       body: Column(
                         children: [
                           RowItem(label: 'Fuel Type', value: ViewModelRideResult.vehicleData.value.fuelTypeDetails[0].title),
-                          RowItem(label: 'Fuel Rate', value: ViewModelRideResult.vehicleData.value.fuelTypeDetails[0].rate),
+                          RowItem(label: 'Fuel Rate', value: ViewModelRideResult.vehicleData.value.fuelTypeDetails[0].rate.toString()),
                           RowItem(label: 'Vehicle Mileage', value: ViewModelRideResult.vehicleData.value.millage),
                           RowItem(label: 'Cost per/Km', value: fuelTypeController.text == 'included' ? ViewModelRideResult.vehicleData.value.serviceDetails.perHourRentWithFuel : ViewModelRideResult.vehicleData.value.serviceDetails.perHourRentWithoutFuel),
                         ],

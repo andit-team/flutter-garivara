@@ -18,7 +18,7 @@ class BasicHeaderWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: double.infinity,height: AppBar().preferredSize.height,),
+        SizedBox(width: double.infinity,height: AppBar().preferredSize.height + Get.mediaQuery.padding.top,),
         Text(
           title,
           maxLines: 2,
