@@ -1,4 +1,5 @@
 import 'package:andgarivara_driver/User/view/homeScreen/homeScreen.dart';
+import 'package:andgarivara_driver/User/view_model/drivingDetailsData.dart';
 import 'package:andgarivara_driver/Utils/appConst.dart';
 import 'package:andgarivara_driver/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara_driver/Utils/drawer/drawer.dart';
@@ -35,21 +36,35 @@ class _HomeBodyState extends State<HomeBody> {
         key: _scaffoldKey,
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Row(
-            children: [
-              Text(
-                'Searching',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: getSizeConfig.getPixels(20),
+          title: Obx((){
+            return Row(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      DrivingDetailsData.distance.value == 0.0? 'Searching':'Driving',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: getSizeConfig.getPixels(20),
+                      ),
+                    ),
+                    Container(
+                        width: width * 100,
+                        height: height * 30,
+                        child: JumpingDots(numberOfDots: 3,height: height,width: width,)),
+                  ],
                 ),
-              ),
-         /*     Container(
-                  width: width * 100,
-                  height: height * 30,
-                  child: JumpingDots(numberOfDots: 3,height: height,width: width,)),*/
-            ],
-          ),
+                SizedBox(width: width*50),
+                Text(
+                  '${(DrivingDetailsData.distance.value).toStringAsFixed(2)} Meters',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: getSizeConfig.getPixels(15),
+                  ),
+                )
+              ],
+            );
+          }),
           backgroundColor: Colors.white,
           elevation: 4,
           leading: IconButton(

@@ -142,6 +142,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: Colors.white,
                   onPressed: (){
                     Get.offAll(firstLogin ? IntroScreenState() : SignInScreen());
+
                   },
                 ),
                 SizedBox(height: height * 15,),

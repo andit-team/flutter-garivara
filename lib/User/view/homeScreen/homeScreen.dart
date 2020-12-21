@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:andgarivara_driver/User/view_model/drivingDetailsData.dart';
 import 'package:andgarivara_driver/Utils/appConst.dart';
 import 'package:andgarivara_driver/Utils/controller/SizeConfigController.dart';
 import 'package:andgarivara_driver/Utils/controller/userLocation.dart';
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   tilt: 15
               ),
               onMapCreated: _onMapCreated,
-              //onTap: setNewLocation,
+              onTap: setNewLocation,
               polylines: _polyLines,
               markers: _markers,
               circles: _circles,
@@ -103,11 +104,28 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
 
+  setNewLocation(LatLng location) {
+    setState(() {
+      addMarker(location);
+    });
+  }
+
+  addMarker(LatLng location) async{
+    Uint8List destinationImageData = await getDestinationMarker();
+    destinationMarkerAndCircle(destinationImageData,'customer','customerRadius',location);
+    await _updateCameraPosition(location);
+    await _setPolyLines(userLocation.location.value,location);
+  }
+
   functions() async{
     Uint8List driverImageData = await getDriverMarker();
     Uint8List destinationImageData = await getDestinationMarker();
-    LatLng staticLatLng = LatLng(22.8144074,89.5663444);
-    destinationMarkerAndCircle(destinationImageData,'customer','customerRadius',staticLatLng);
+
+    List<LatLng> staticLatLngArray = [LatLng(22.814813045289004, 89.56585662823029),LatLng(22.814413184430226, 89.56638611878599),LatLng(22.813387065526847, 89.5662521512965)];
+
+    for(int x = 0;x<staticLatLngArray.length;x++){
+      destinationMarkerAndCircle(destinationImageData,'customer$x','customerRadius$x',staticLatLngArray[x]);
+    }
 
     Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.best,intervalDuration: Duration(milliseconds: 2000)).listen((Position position) {
       LatLng latLng = LatLng(position.latitude, position.longitude);
@@ -115,7 +133,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       updateMarkerAndCircle(position,driverImageData,'driver','driverRadius',latLng);
     });
 
-    _setPolyLines(userLocation.location.value,staticLatLng);
+    //LatLng staticLatLng = LatLng(22.814413184430226, 89.56638611878599);
+    //await _setPolyLines(userLocation.location.value,staticLatLng);
 
     setState(() {
       loading = false;
@@ -133,7 +152,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   void destinationMarkerAndCircle(imageData,vehicleMarker,vehicleRadius,staticLatLng) {
-
     this.setState(() {
       _markers.add(
           Marker(
@@ -144,15 +162,19 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               flat: true,
               anchor: Offset(0.5, 0.5),
               icon: BitmapDescriptor.fromBytes(imageData),
+              onTap: () async {
+                await _setPolyLines(userLocation.location.value,staticLatLng);
+              },
           )
       );
-      _circles.add(Circle(
+      _circles.add(
+          Circle(
           circleId: CircleId(vehicleRadius),
           center: staticLatLng,
-          radius: 3000,
+          radius: 30,
           zIndex: 1,
-          strokeColor: Colors.blue.withOpacity(0.2),
-          fillColor: Colors.blue.withAlpha(70).withOpacity(0.2),
+          strokeColor: Colors.white.withOpacity(0.01),
+          fillColor: Colors.white.withAlpha(70).withOpacity(0.01),
       )
       );
     });
@@ -198,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     GoogleMapController controller = await mapController.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
   }
+
   _setPolyLines(LatLng source, LatLng destination)  {
     polylineCoordinates.clear();
     polylinePoints.getRouteBetweenCoordinates(DotEnv().env['google_api_key'],
@@ -215,6 +238,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               color: AppConst.appBlue,
               points: polylineCoordinates));
         });
+
+        DrivingDetailsData.distance.value = Geolocator.distanceBetween(source.latitude, source.longitude, destination.latitude, destination.longitude);
+        print(DrivingDetailsData.distance.value);
       }
     });
   }
