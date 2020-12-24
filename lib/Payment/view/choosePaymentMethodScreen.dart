@@ -157,11 +157,16 @@ class _ChoosePaymentMethodScreenState extends State<ChoosePaymentMethodScreen> {
                   setState(() {
                     loading = false;
                   });
-                  if(!error){
-                    GetRideStatusController rideStatus = Get.find();
-                    rideStatus.updateStatus(RideStatus.PROCESSING);
-                    Get.offAll(HomeBody());
-                  }
+                  //TODO await api correction
+                  // if(!error){
+                  //   GetRideStatusController rideStatus = Get.find();
+                  //   rideStatus.updateStatus(RideStatus.PROCESSING);
+                  //   Get.offAll(HomeBody());
+                  // }
+                  GetRideStatusController rideStatus = Get.find();
+                  rideStatus.updateStatus(RideStatus.PROCESSING);
+                  Get.offAll(HomeBody());
+                  error = false;
                   Snack.top(
                     error ? 'Error' : 'Success',
                     error ? 'Something went wrong.' : 'Please wait for the driver to accept your request.'

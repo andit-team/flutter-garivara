@@ -282,9 +282,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   }else{
                                     Get.back();
                                   }
-                                  Snack.bottom(response.error ? 'Error' : 'Success', response.msg);
-
-
+                                  Snack.top(response.error ? 'Error' : 'Success', response.msg);
                                 }
                               },
                               title: 'Sign up',

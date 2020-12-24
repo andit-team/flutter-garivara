@@ -89,7 +89,7 @@ class RepoRideResult{
       "fuelCost": fuelCost,
       "fuelCostUpDown": fuelCost * 2,
       "voucher": 0,
-      "voucherType": "_",
+      "voucherType": "tk",
       "totalFare": totalFare,
       "grandTotalFare" : grandTotal,
       "paymentType": "cash",
@@ -110,6 +110,7 @@ class RepoRideResult{
 
   static requestRide(Map<String, dynamic> data, vehicleId) async{
     try{
+      print(data);
       Response response = await DBHelper.dio.post(
         DotEnv().env['API_URL']+DotEnv().env['rentCarReq']+'/$vehicleId',
         data: data,
@@ -119,6 +120,8 @@ class RepoRideResult{
           }
         )
       );
+
+      print(response.data);
 
       return response.data['error'];
 

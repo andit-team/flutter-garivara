@@ -18,12 +18,13 @@ class RepoLogin{
       //TODO login response model needs work later
       LoginResponseModel loginResponse = LoginResponseModel.fromJson(response.data);
 
-      if(!loginResponse.error){
+      if(!loginResponse.error && loginResponse.data.role.contains('passenger')){
         ViewModelUserData.userData.value = loginResponse.data;
         ViewModelUserData.userToken.value = loginResponse.token;
+        return false;
+      }else{
+        return true;
       }
-
-      return response.data['error'];
 
     }catch(e){
       print(e.toString());
