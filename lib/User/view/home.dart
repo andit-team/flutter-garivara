@@ -7,6 +7,7 @@ import 'package:andgarivara_driver/Utils/dummyPage.dart';
 import 'package:andgarivara_driver/Utils/widgets/jumpingDots.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -36,32 +37,33 @@ class _HomeBodyState extends State<HomeBody> {
         key: _scaffoldKey,
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Obx((){
+          title: Obx(() {
             return Row(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      DrivingDetailsData.distance.value == 0.0? 'Searching':'Driving',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: getSizeConfig.getPixels(20),
-                      ),
-                    ),
-                    Container(
-                        width: width * 100,
-                        height: height * 30,
-                        child: JumpingDots(numberOfDots: 3,height: height,width: width,)),
-                  ],
-                ),
-                SizedBox(width: width*50),
                 Text(
-                  '${(DrivingDetailsData.distance.value).toStringAsFixed(2)} Meters',
+                  DrivingDetailsData.distance.value == 0.0
+                      ? 'Searching'
+                      : 'Driving',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: getSizeConfig.getPixels(15),
+                    fontSize: getSizeConfig.getPixels(20),
                   ),
-                )
+                ),
+    /*            DrivingDetailsData.distance.value == 0.0
+                    ? Container(
+                        width: width * 100,
+                        height: height * 50,
+                        child: SpinKitRipple(
+                          color: Colors.grey,
+                          duration: Duration(milliseconds: 1500),
+                        ),
+                      )
+                    : Container(
+                        width: width * 100,
+                        height: height * 30,
+                        child: JumpingDots(
+                            numberOfDots: 3, height: height, width: width),
+                      ),*/
               ],
             );
           }),

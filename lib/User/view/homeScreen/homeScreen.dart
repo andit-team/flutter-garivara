@@ -9,6 +9,7 @@ import 'package:andgarivara_driver/Utils/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -52,69 +53,103 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: AnimatedCrossFade(
-        duration: AppConst.duration,
-        firstChild: Loader(),
-        secondChild: googleMap(),
-        //TODO crossFades
-        crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      body: Stack(
+        children: [
+          AnimatedCrossFade(
+            duration: AppConst.duration,
+            firstChild: Center(child: Loader(),),
+            secondChild: googleMap(),
+            crossFadeState: loading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          ),
+          DrivingDetailsData.distance.value != 0.0?AnimatedPositioned(
+            bottom: 0,
+            duration: AppConst.duration,
+            child: AnimatedContainer(
+              duration: AppConst.duration,
+              constraints: BoxConstraints(
+                maxWidth: Get.width,
+                minWidth: Get.width,
+                maxHeight: Get.height * .25,
+                minHeight: Get.height * .25,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(sizeConfig.width * 100),
+                      topLeft: Radius.circular(sizeConfig.width * 100)
+                  ),
+                  boxShadow: [
+                    AppConst.shadow
+                  ]
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15,horizontal: sizeConfig.getPixels(20)),
+                child: statusProcessing(),
+              ),
+            ),
+          ):Container(),
+          Positioned(
+            right: sizeConfig.width*30,
+            top: sizeConfig.height*30,
+            child: FloatingActionButton(
+              heroTag: null,
+              onPressed: () async {
+                await _updateCameraPosition(userLocation.location.value);
+              },
+              child: Icon(Icons.location_on),
+            ),
+          ),
+          Positioned(
+            right: sizeConfig.width*30,
+            top: sizeConfig.height*150,
+            child: FloatingActionButton(
+              heroTag: null,
+              onPressed: () {
+                resetEverything();
+              },
+              child: Icon(Icons.refresh_outlined),
+            ),
+          ),
+        ],
       ),
     );
   }
 
 
   Widget googleMap(){
-    return Stack(
-      children: [
-        Container(
-            width: sizeConfig.width*1000,
-            height: sizeConfig.height*1000,
-            child: GoogleMap(
-              compassEnabled: false,
-              zoomControlsEnabled: false,
-              zoomGesturesEnabled: true,
-              minMaxZoomPreference: MinMaxZoomPreference.unbounded,
-              buildingsEnabled: true,
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                  target: userLocation.location.value,
-                  zoom: 18,
-                  tilt: 15
-              ),
-              onMapCreated: _onMapCreated,
-              onTap: setNewLocation,
-              polylines: _polyLines,
-              markers: _markers,
-              circles: _circles,
-            )
-        ),
-        Positioned(
-          right: sizeConfig.width*30,
-          bottom: sizeConfig.height*30,
-          child: FloatingActionButton(
-
-            onPressed: ()async {
-              await _updateCameraPosition(userLocation.location.value);
-            },
-            child: Icon(Icons.location_on),
+    return Container(
+        width: sizeConfig.width*1000,
+        height: sizeConfig.height*1000,
+        child: GoogleMap(
+          compassEnabled: false,
+          zoomControlsEnabled: false,
+          zoomGesturesEnabled: true,
+          minMaxZoomPreference: MinMaxZoomPreference.unbounded,
+          buildingsEnabled: true,
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+              target: userLocation.location.value,
+              zoom: 18,
+              tilt: 15
           ),
-        ),
-      ],
+          onMapCreated: _onMapCreated,
+          onTap: addMarker,
+          polylines: _polyLines,
+          markers: _markers,
+          circles: _circles,
+        )
     );
   }
 
 
-  setNewLocation(LatLng location) {
-    setState(() {
-      addMarker(location);
-    });
-  }
+
 
   addMarker(LatLng location) async{
     Uint8List destinationImageData = await getDestinationMarker();
-    destinationMarkerAndCircle(destinationImageData,'customer','customerRadius',location);
+    destinationMarkerAndCircle(destinationImageData,'customerX','customerRadiusX',location);
     await _updateCameraPosition(location);
-    await _setPolyLines(userLocation.location.value,location);
+    _setPolyLines(userLocation.location.value,location);
+
   }
 
   functions() async{
@@ -135,10 +170,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
     //LatLng staticLatLng = LatLng(22.814413184430226, 89.56638611878599);
     //await _setPolyLines(userLocation.location.value,staticLatLng);
+    loading = false;
 
-    setState(() {
-      loading = false;
-    });
   }
 
   Future<Uint8List> getDriverMarker() async {
@@ -151,33 +184,32 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     return byteData.buffer.asUint8List();
   }
 
-  void destinationMarkerAndCircle(imageData,vehicleMarker,vehicleRadius,staticLatLng) {
-    this.setState(() {
-      _markers.add(
-          Marker(
-              markerId: MarkerId(vehicleMarker),
-              position: staticLatLng,
-              draggable: false,
-              zIndex: 2,
-              flat: true,
-              anchor: Offset(0.5, 0.5),
-              icon: BitmapDescriptor.fromBytes(imageData),
-              onTap: () async {
-                await _setPolyLines(userLocation.location.value,staticLatLng);
-              },
-          )
-      );
-      _circles.add(
-          Circle(
-          circleId: CircleId(vehicleRadius),
+  void destinationMarkerAndCircle(imageData,customerMarker,customerRadius,staticLatLng) {
+    _markers.add(
+        Marker(
+          markerId: MarkerId(customerMarker),
+          position: staticLatLng,
+          draggable: false,
+          zIndex: 2,
+          flat: true,
+          anchor: Offset(0.5, 0.5),
+          icon: BitmapDescriptor.fromBytes(imageData),
+          onTap: ()  {
+            _setPolyLines(userLocation.location.value,staticLatLng);
+          },
+        )
+    );
+    _circles.add(
+        Circle(
+          circleId: CircleId(customerRadius),
           center: staticLatLng,
           radius: 30,
           zIndex: 1,
           strokeColor: Colors.white.withOpacity(0.01),
           fillColor: Colors.white.withAlpha(70).withOpacity(0.01),
-      )
-      );
-    });
+        )
+    );
+    print(_markers);
   }
 
   void updateMarkerAndCircle(position,imageData,vehicleMarker,vehicleRadius,latLng) {
@@ -245,4 +277,57 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     });
   }
 
+
+
+
+
+
+
+
+
+
+/*  Widget bottomSheet(){
+    if(DrivingDetailsData.distance.value != 0.0){
+      return statusProcessing();
+    }else{
+      return Container();
+    }
+  }*/
+
+/*  ///   STATUS NONE
+  Widget statusNone() => Padding(
+    padding: EdgeInsets.symmetric(vertical: sizeConfig.height * 15),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SpinKitPulse(
+          color: Colors.grey,
+        ),
+      ],
+    ),
+  );*/
+
+  Widget statusProcessing() => Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      Text(
+        '${(DrivingDetailsData.distance.value).toStringAsFixed(2)} Meters',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: sizeConfig.getPixels(15),
+        ),
+      )
+    ],
+  );
+
+  resetEverything(){
+    polylineCoordinates.clear();
+    DrivingDetailsData.distance.value = 0.0;
+    _markers.remove('customerX');
+    _circles.remove('customerRadiusX');
+    _updateCameraPosition(userLocation.location.value);
+    print(_markers);
+  }
 }
